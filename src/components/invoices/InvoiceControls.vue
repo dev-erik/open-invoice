@@ -7,11 +7,12 @@
                 <span class="d-inline-block">{{ $t('invoice-controls:back') }}</span>
             </router-link>
             <div class="d-flex align-items-center">
-                <AppSelect :value="getStatusObj"
-                           class="mb-0 mr-2 text-capitalize multiselect--capitalize"
+                <AppSelect :modelValue="getStatusObj"
+                           class="mb-0 me-2 text-capitalize multiselect--capitalize"
+                           style="min-width: 160px"
                            :options="invoiceStatuses"
                            label-field="name"
-                           @input="updateProp({status: $event.value})"/>
+                           @update:modelValue="updateProp({status: $event.value})"/>
                 <button class="btn btn-outline-dark"
                         v-if="invoice.status === 'draft'"
                         @click="bookInvoice">{{ $t('invoice-controls:book') }}

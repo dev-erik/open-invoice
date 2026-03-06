@@ -71,12 +71,12 @@
                               :label="$t('client-form:invoicing.rate')" field="rate" :errors="errors" class="col-sm-4"/>
                     <AppCheckbox :value="client.has_tax" @input="updateProp({ has_tax: $event })"
                                  :label="$t('client-form:invoicing.has_tax')" field="has_tax" :errors="errors" class="col-sm-4"/>
-                    <AppSelect :value="client.bank_account"
+                    <AppSelect :modelValue="client.bank_account"
                                track-by="id"
                                :label="$t('client-form:invoicing.bank_account')"
                                label-field="bank_name"
                                :options="bankAccounts || []"
-                               @input="bankAccountChanged"
+                               @update:modelValue="bankAccountChanged"
                                class="col-12"/>
                 </div>
             </div>
