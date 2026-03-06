@@ -5,5 +5,6 @@
   "city": "읍/면/동",
   "county": "시/도",
   "country": "국가",
-  "your_email": "당신의 이메일"
+  "your_email": "당신의 이메일",
+  "vat_code": "사업자등록번호"
 }

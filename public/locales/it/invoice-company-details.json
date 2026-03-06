@@ -5,5 +5,6 @@
     "city": "Citta",
     "county": "Provincia",
     "country": "Stato",
-    "your_email": "Posta elettronica"
+    "your_email": "Posta elettronica",
+    "vat_code": "P.IVA / Codice fiscale"
 }

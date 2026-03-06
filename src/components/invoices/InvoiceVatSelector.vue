@@ -21,7 +21,7 @@
 
 <script>
 import Multiselect from '@vueform/multiselect';
-import { vatRates } from '@/data/vat-rates';
+import { vatRates, countryFlag } from '@/data/vat-rates';
 
 export default {
   components: { Multiselect },
@@ -32,12 +32,16 @@ export default {
   emits: ['change'],
   computed: {
     options() {
-      return vatRates.map(v => ({
-        ...v,
-        displayLabel: v.rate > 0
-          ? `${v.country} — ${v.rate}% ${v.taxName}`
-          : `${v.country} — ${v.taxName} (enter rate)`,
-      }));
+      return vatRates.map(v => {
+        const flag = countryFlag(v.code);
+        const rateText = v.rate > 0
+          ? `${v.rate}% ${v.taxName}`
+          : `${v.taxName} (enter rate)`;
+        return {
+          ...v,
+          displayLabel: `${flag}  ${v.country} — ${rateText}`,
+        };
+      });
     },
     selected() {
       if (!this.vatCountry) return null;

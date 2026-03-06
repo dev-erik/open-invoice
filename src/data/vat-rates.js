@@ -76,3 +76,9 @@ export const vatRates = [
 export function findVatRate(countryCode) {
   return vatRates.find(v => v.code === countryCode) || null;
 }
+
+export function countryFlag(code) {
+  return String.fromCodePoint(
+    ...code.toUpperCase().split('').map(c => 0x1F1E6 + c.charCodeAt(0) - 65),
+  );
+}

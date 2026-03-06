@@ -5,5 +5,6 @@
   "city": "Cidade",
   "county": "Estado",
   "country": "País",
-  "your_email": "Seu email"
+  "your_email": "Seu email",
+  "vat_code": "CNPJ / ID fiscal"
 }
