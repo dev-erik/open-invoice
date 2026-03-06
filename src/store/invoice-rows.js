@@ -4,6 +4,7 @@ import { flatten, uniqBy } from 'lodash';
 import { useInvoicesStore } from '@/store/invoices';
 import { useTaxesStore } from '@/store/taxes';
 import { useClientsStore } from '@/store/clients';
+import { findVatRate } from '@/data/vat-rates';
 
 export const useInvoiceRowsStore = defineStore('invoiceRows', {
   getters: {
@@ -72,6 +73,22 @@ export const useInvoiceRowsStore = defineStore('invoiceRows', {
         });
       }
 
+      if (invoice.vat_rate && invoice.vat_country) {
+        const VAT_LABELS = ['VAT', 'GST', 'Consumption Tax', 'Sales Tax'];
+        const hasVat = taxes.some(t => VAT_LABELS.includes(t.label));
+        if (!hasVat) {
+          const vatEntry = findVatRate(invoice.vat_country);
+          if (vatEntry) {
+            taxes.push({
+              id: uuidv4(),
+              row_id: rowId,
+              label: vatEntry.taxName,
+              value: vatEntry.rate,
+            });
+          }
+        }
+      }
+
       invoice.rows.push({
         id: rowId,
         invoice_id: invoiceId,
@@ -101,6 +118,27 @@ export const useInvoiceRowsStore = defineStore('invoiceRows', {
           label: tax.label,
           value: tax.value,
         }));
+      });
+    },
+    setVatOnAllRows(invoiceId, taxName, rate) {
+      const invoicesStore = useInvoicesStore();
+      const invoice = invoicesStore.items.find(i => i.id === invoiceId);
+      if (!invoice || !invoice.rows) return;
+
+      const VAT_LABELS = ['VAT', 'GST', 'Consumption Tax', 'Sales Tax'];
+
+      invoice.rows.forEach(row => {
+        if (!row.taxes) row.taxes = [];
+        row.taxes = row.taxes.filter(t => !VAT_LABELS.includes(t.label));
+
+        if (taxName && rate) {
+          row.taxes.push({
+            id: uuidv4(),
+            row_id: row.id,
+            label: taxName,
+            value: rate,
+          });
+        }
       });
     },
     removeRow(invoiceId, rowId) {

@@ -7,6 +7,7 @@ import { useClientsStore } from '@/store/clients';
 import { useTeamsStore } from '@/store/teams';
 import { useInvoiceClientFieldsStore } from '@/store/invoice-client-fields';
 import { useInvoiceTeamFieldsStore } from '@/store/invoice-team-fields';
+import { useInvoiceRowsStore } from '@/store/invoice-rows';
 
 function computeInvoiceTotals(invoice) {
   if (!invoice) return invoice;
@@ -112,6 +113,7 @@ export const useInvoicesStore = defineStore('invoices', {
         from_website: '',
         from_email: '',
         from_phone: '',
+        from_vat_code: '',
         bank_name: '',
         bank_account_no: '',
         client_name: '',
@@ -128,6 +130,8 @@ export const useInvoicesStore = defineStore('invoices', {
         created_at: '',
         client_fields: [],
         team_fields: [],
+        vat_rate: null,
+        vat_country: null,
         _isNew: true,
       };
 
@@ -177,6 +181,7 @@ export const useInvoicesStore = defineStore('invoices', {
         from_website: 'website',
         from_email: 'contact_email',
         from_phone: 'contact_phone',
+        from_vat_code: 'vat_code',
       });
 
       const invoice = this.items.find(i => i.id === payload.invoiceId);
@@ -212,6 +217,22 @@ export const useInvoicesStore = defineStore('invoices', {
       } catch (err) {
         this.errors.set(err.errors);
       }
+    },
+    async updateVat({ invoiceId, vatEntry }) {
+      const props = vatEntry
+        ? { vat_rate: vatEntry.rate, vat_country: vatEntry.code }
+        : { vat_rate: null, vat_country: null };
+
+      this.updateInvoiceProps(invoiceId, props);
+
+      const invoiceRowsStore = useInvoiceRowsStore();
+      invoiceRowsStore.setVatOnAllRows(
+        invoiceId,
+        vatEntry ? vatEntry.taxName : null,
+        vatEntry ? vatEntry.rate : null,
+      );
+
+      return this.updateInvoice({ invoiceId });
     },
     async deleteInvoice(invoice) {
       const res = await InvoiceService.deleteInvoice(invoice.id);
@@ -262,7 +283,7 @@ export const useInvoicesStore = defineStore('invoices', {
           client_county: client.company_county,
           client_country: client.company_country,
           client_email: client.invoice_email,
-          currency: client.currency || (team && team.currency) || 'USD',
+          currency: client.currency || (team && team.currency) || 'EUR',
           bank_name: client.bank_account ? client.bank_account.bank_name : null,
           bank_account_no: client.bank_account ? client.bank_account.account_no : null,
         },
@@ -279,7 +300,7 @@ export const useInvoicesStore = defineStore('invoices', {
           .format('YYYY-MM-DD'),
         number: generateInvoiceNumber(this.all),
         late_fee: (team && team.invoice_late_fee) || 0.5,
-        currency: (team && team.currency) || 'USD',
+        currency: (team && team.currency) || 'EUR',
       };
 
       return this.updateInvoice({
@@ -317,6 +338,7 @@ export const useInvoicesStore = defineStore('invoices', {
         from_website: team.website,
         from_email: team.contact_email,
         from_phone: team.contact_phone,
+        from_vat_code: team.vat_code || '',
       };
 
       return this.updateInvoice({

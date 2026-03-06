@@ -25,6 +25,7 @@ function createDefaultTeam() {
     website: '',
     contact_email: '',
     contact_phone: '',
+    vat_code: '',
     currency: null,
     invoice_late_fee: null,
     invoice_due_days: null,

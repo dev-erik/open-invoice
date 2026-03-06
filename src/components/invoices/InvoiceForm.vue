@@ -14,11 +14,19 @@
                         <InvoiceCompanyDetails :invoice="invoice" :errors="errors" @update="updateProp"
                                                class="col-6 text-end"/>
                     </div>
-                    <div class="row mt-3">
-                        <AppEditable :value="invoice.notes"
+                    <div class="row mt-3 mb-2">
+                        <AppEditable :modelValue="invoice.notes"
                                      class="col-12"
                                      :placeholder="$t('invoice-form:insert_note')"
                                      @change="updateProp({ notes: $event })"/>
+                    </div>
+                    <div class="row mb-3 d-print-none">
+                        <div class="col-12">
+                            <InvoiceVatSelector
+                                :vatCountry="invoice.vat_country"
+                                :vatRate="invoice.vat_rate"
+                                @change="onVatChange"/>
+                        </div>
                     </div>
                     <div class="row">
                         <table class="table" :class="{'invoice__rows--compact': invoice.is_compact}">
@@ -55,10 +63,12 @@ import AppEditable from '@/components/form/AppEditable.vue';
 import TeamLogo from '@/components/team/TeamLogo.vue';
 import InvoiceRowsHeader from '@/components/invoices/InvoiceRowsHeader.vue';
 import InvoiceAddRowBtn from '@/components/invoices/InvoiceAddRowBtn.vue';
+import InvoiceVatSelector from '@/components/invoices/InvoiceVatSelector.vue';
 
 export default {
   components: {
     InvoiceAddRowBtn,
+    InvoiceVatSelector,
     TeamLogo,
     InvoiceTotals,
     InvoiceHeader,
@@ -98,6 +108,12 @@ export default {
       this.invoicesStore.updateInvoice({
         props,
         invoiceId: this.invoice.id,
+      });
+    },
+    onVatChange(vatEntry) {
+      this.invoicesStore.updateVat({
+        invoiceId: this.invoice.id,
+        vatEntry,
       });
     },
   },
