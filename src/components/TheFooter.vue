@@ -10,10 +10,15 @@
             </button>
         </div>
         <div class="col-md-8 text-start text-md-end">
-            <small :title="$t('the-footer:title')"
-                   class="pointer"
+            <small class="pointer position-relative data-info-trigger"
                    v-if="!isStorageWordpress">
+                <i class="material-icons md-14 align-text-bottom">info_outline</i>
                 {{ $t('the-footer:what_about_my_data') }}
+                <div class="data-info-popover">
+                    <div class="data-info-popover__content">
+                        {{ $t('the-footer:title') }}
+                    </div>
+                </div>
             </small>
             <small class="ps-2">
                 Open Invoice
@@ -62,3 +67,34 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.data-info-trigger {
+  display: inline-block;
+}
+
+.data-info-popover {
+  position: absolute;
+  bottom: 2rem;
+  right: 0;
+  z-index: 50;
+  max-width: 360px;
+  width: max-content;
+  display: none;
+
+  &__content {
+    background: var(--bg-primary);
+    border: 1px solid var(--text-caption);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.data-info-trigger:hover .data-info-popover {
+  display: block;
+}
+</style>
