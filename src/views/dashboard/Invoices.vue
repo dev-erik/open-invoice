@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-12 mb-4 pr-0 d-flex justify-content-between">
+            <div class="col-12 mb-4 pe-0 d-flex justify-content-between">
                 <h4 class="mb-0">{{ $t('invoices:title') }}</h4>
                 <div>
                     <button class="btn btn-sm btn-outline-dark"
-                            :class="{ 'mr-3': !isStorageLocal }"
+                            :class="{ 'me-3': !isStorageLocal }"
                             @click="createNewInvoice">{{ $t('invoices:new_invoice') }}
                     </button>
                     <div class="dropdown d-inline-block" v-if="isStorageLocal">

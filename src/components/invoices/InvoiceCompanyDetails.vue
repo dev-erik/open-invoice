@@ -6,7 +6,7 @@
                          field="from_name"
                          :placeholder="$t('invoice-company-details:your_company_name')"
                          @change="updateProp({ from_name: $event })"/>
-            <i class="material-icons md-18 ml-2 pointer d-print-none" @click="editTeam">edit</i>
+            <i class="material-icons md-18 ms-2 pointer d-print-none" @click="editTeam">edit</i>
         </strong>
         <AppEditable :value="invoice.from_address"
                      suffix=", "

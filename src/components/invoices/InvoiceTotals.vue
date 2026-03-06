@@ -1,16 +1,16 @@
 <template>
     <tfoot>
-    <tr class="text-right">
+    <tr class="text-end">
         <td :colspan="colspan">{{ $t('invoice-totals:subtotal') }}</td>
         <td>{{ formatCurrency(invoice.subTotal) }}</td>
     </tr>
-    <tr class="text-right" v-for="tax in invoice.taxes" :key="tax.label">
+    <tr class="text-end" v-for="tax in invoice.taxes" :key="tax.label">
         <td :colspan="colspan">
             {{ tax.label }} ({{ tax.rate }}%)
         </td>
         <td>{{ formatCurrency(tax.total) }}</td>
     </tr>
-    <tr class="text-right">
+    <tr class="text-end">
         <th :colspan="colspan">
             {{ $t('invoice-totals:total') }}
             <AppEditable :value="invoice.currency"

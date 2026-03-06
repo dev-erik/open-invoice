@@ -36,7 +36,7 @@
                          :placeholder="$t('invoice-row:enter_tax')"
                          @change="updateTaxProp({ value: $event }, tax)"/>
         </td>
-        <td class="text-right position-relative">
+        <td class="text-end position-relative">
             {{ formatCurrency(row.quantity * row.price) }}
             <button class="btn btn-sm d-print-none invoice__row-control"
                     @click="removeRow(row)">

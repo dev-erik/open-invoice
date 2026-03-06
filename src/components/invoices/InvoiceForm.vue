@@ -6,13 +6,13 @@
                     <div class="row mb-5">
                         <TeamLogo class="col-4" :errors="errors"/>
                         <InvoiceHeader :invoice="invoice" :errors="errors" @update="updateProp"
-                                       class="col-8 text-right mb-2"/>
+                                       class="col-8 text-end mb-2"/>
                     </div>
                     <div class="row">
                         <InvoiceClientDetails :invoice="invoice" :errors="errors" @update="updateProp"
                                               class="col-6"/>
                         <InvoiceCompanyDetails :invoice="invoice" :errors="errors" @update="updateProp"
-                                               class="col-6 text-right"/>
+                                               class="col-6 text-end"/>
                     </div>
                     <div class="row mt-3">
                         <AppEditable :value="invoice.notes"
@@ -32,10 +32,10 @@
                         </table>
                     </div>
                     <hr>
-                    <div class="row pl-3 pr-3 justify-content-between">
+                    <div class="row ps-3 pe-3 justify-content-between">
                         <InvoiceBankDetails :invoice="invoice" :errors="errors" @update="updateProp"/>
                         <InvoiceContactDetails :invoice="invoice" :errors="errors" @update="updateProp"
-                                               class="text-right"/>
+                                               class="text-end"/>
                     </div>
                 </div>
             </div>

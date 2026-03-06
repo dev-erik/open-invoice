@@ -8,7 +8,7 @@
                 <th>{{ $t('invoices-list:client') }}</th>
                 <th>{{ $t('invoices-list:issued_at') }}</th>
                 <th>{{ $t('invoices-list:total') }}</th>
-                <th class="text-right">{{ $t('invoices-list:status') }}</th>
+                <th class="text-end">{{ $t('invoices-list:status') }}</th>
             </tr>
             </thead>
             <tbody v-if="invoices">
@@ -23,11 +23,11 @@
                     {{ formatCurrency(invoice.subTotal) }}
                     <small v-if="invoice.taxTotal"><br>({{ formatCurrency(invoice.total) }})</small>
                 </td>
-                <td class="text-right text-capitalize">
-                    <i class="material-icons material-icons-round md-18 mr-2 text-warning"
+                <td class="text-end text-capitalize">
+                    <i class="material-icons material-icons-round md-18 me-2 text-warning"
                        v-if="isOverDue(invoice)"
                        title="Overdue">warning</i>
-                    <i class="material-icons material-icons-round md-18 mr-2 text-success"
+                    <i class="material-icons material-icons-round md-18 me-2 text-success"
                        v-else-if="invoice.status === 'paid'">done</i>
                     {{ $t(`statuses:${invoice.status}`) }}
                 </td>

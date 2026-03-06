@@ -16,18 +16,6 @@ class InvoiceService {
   }
 
   async updateInvoice(invoice) {
-    const requiredFields = {
-      currency: 'Currency',
-      issued_at: 'Issued At',
-      due_at: 'Due At',
-      number: 'Number',
-    };
-
-    const res = validate(requiredFields, invoice);
-    if (Object.keys(res.errors).length > 0) {
-      return Promise.reject(res);
-    }
-
     return data.patch(`invoices/${invoice.id}`, invoice);
   }
 

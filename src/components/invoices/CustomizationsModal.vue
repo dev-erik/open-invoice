@@ -13,7 +13,7 @@
                                  field="custom_css"
                                  :errors="errors"
                                  input-classes="min-vh-50 text-monospace"
-                                 class="text-left"/>
+                                 class="text-start"/>
                 </div>
             </div>
         </div>

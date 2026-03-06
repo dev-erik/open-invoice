@@ -8,7 +8,7 @@
             <th v-for="tax in taxes" :key="tax.id">
                 {{ tax.label }} %
             </th>
-            <th class="text-right">{{ $t('invoice-rows-header:sum') }}</th>
+            <th class="text-end">{{ $t('invoice-rows-header:sum') }}</th>
         </tr>
     </thead>
 </template>
