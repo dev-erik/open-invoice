@@ -11,15 +11,6 @@ class InvoiceService {
   }
 
   async createInvoice(invoice) {
-    const requiredFields = {
-      currency: 'Currency',
-      number: 'Number',
-    };
-    const res = validate(requiredFields, invoice);
-    if (Object.keys(res.errors).length > 0) {
-      return Promise.reject(res);
-    }
-
     delete invoice.client;
     return data.post('invoices', invoice);
   }

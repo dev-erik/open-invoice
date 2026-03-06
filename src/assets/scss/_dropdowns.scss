@@ -9,3 +9,7 @@
     transition: all 0.15s ease-out;
   }
 }
+
+.dropdown-toggle.no-caret::after {
+  display: none;
+}

@@ -9,19 +9,20 @@ import { useLanguageStore } from '@/store/language';
 import '@/config/local-storage.config';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 NProgress.configure({ showSpinner: false });
 
-const app = createApp(App);
-
-app.use(pinia);
-app.use(router);
-app.use(Notifications);
-app.use(I18NextVue, { i18next });
-
 initialized.then(() => {
+  const app = createApp(App);
+
+  app.use(pinia);
+  app.use(router);
+  app.use(Notifications);
+  app.use(I18NextVue, { i18next });
+
   const languageStore = useLanguageStore();
   languageStore.initLanguage(i18next.language);
-});
 
-app.mount('#app');
+  app.mount('#app');
+});

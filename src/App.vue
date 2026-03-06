@@ -58,4 +58,14 @@ $body-bg: #fff;
 @import 'bootstrap/scss/bootstrap';
 @import 'nprogress/nprogress.css';
 @import './assets/scss/app';
+
+:root {
+  --bs-body-color: var(--text-primary);
+  --bs-body-bg: var(--bg-body);
+}
+
+body {
+  color: var(--text-primary);
+  background-color: var(--bg-body);
+}
 </style>

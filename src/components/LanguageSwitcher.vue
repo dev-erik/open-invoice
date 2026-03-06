@@ -1,6 +1,6 @@
 <template>
     <div v-if="selectedLang" class="dropdown d-inline-block">
-        <button class="btn btn-sm btn-link text-secondary dropdown-toggle"
+        <button class="btn btn-sm btn-link text-secondary dropdown-toggle no-caret"
                 type="button" data-bs-toggle="dropdown" aria-expanded="false">
             <span class="text-uppercase">{{ selectedLang.code }}</span>
             <i class="material-icons md-18">expand_more</i>
