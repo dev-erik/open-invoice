@@ -1,0 +1,10 @@
+{
+    "label": "Название",
+    "field": "Поле",
+    "delete_modal": {
+        "title": "Удалить поле",
+        "ok_title": "Удалить",
+        "cancel_title": "Отмена"
+    },
+    "notification_deleted": "Удалено"
+}

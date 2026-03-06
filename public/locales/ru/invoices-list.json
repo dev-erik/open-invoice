@@ -1,0 +1,7 @@
+{
+    "invoice_number": "№",
+    "client": "Клиент",
+    "issued_at": "Дата выставления",
+    "total": "Итого",
+    "status": "Статус"
+}

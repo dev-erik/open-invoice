@@ -1,0 +1,10 @@
+{
+    "label": "التسمية",
+    "tax": "الضريبة",
+    "delete_modal": {
+        "title": "حذف الضريبة",
+        "ok_title": "حذف",
+        "cancel_title": "إلغاء"
+    },
+    "notification_deleted": "تم الحذف"
+}

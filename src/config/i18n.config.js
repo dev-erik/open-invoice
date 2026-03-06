@@ -13,12 +13,12 @@ const ns = [
   'invoice-contact-details', 'invoice-controls', 'invoice-form', 'invoice-header',
   'invoice-row', 'invoice-rows-header', 'invoice-totals', 'invoices',
   'invoices-list', 'statuses', 'team-fields', 'team-form', 'team-logo',
-  'team-taxes', 'the-footer',
+  'team-taxes', 'the-footer', 'invoice-vat',
 ];
 
 const initialized = i18next.init({
   fallbackLng: 'en',
-  supportedLngs: ['en', 'de', 'fr', 'et', 'fa', 'bn', 'es', 'pt_br', 'it', 'id', 'kr'],
+  supportedLngs: ['en', 'ar', 'bn', 'de', 'es', 'et', 'fa', 'fr', 'id', 'it', 'ja', 'kr', 'nl', 'pt_br', 'ru', 'zh'],
   ns,
   defaultNS: false,
   backend: {

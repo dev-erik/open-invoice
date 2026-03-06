@@ -1,0 +1,36 @@
+{
+    "title": "您的公司",
+    "done": "完成",
+    "updated": "已更新",
+    "loading": "加载中",
+    "tabs": {
+        "general": "基本信息",
+        "invoicing": "开票",
+        "address": "地址",
+        "taxes": "税费"
+    },
+    "general": {
+        "company_name": "公司名称",
+        "contact_email": "电子邮件",
+        "contact_phone": "电话",
+        "website": "网站"
+    },
+    "invoicing": {
+        "invoice_late_fee": "滞纳金 (%)",
+        "invoice_due_days": "付款期限（天）",
+        "currency": "默认货币"
+    },
+    "address": {
+        "company_address": "公司地址",
+        "company_postal_code": "邮政编码",
+        "company_city": "城市",
+        "company_county": "省/州",
+        "company_country": "国家"
+    },
+    "tax_modal": {
+        "title": "覆盖当前发票行的税费？",
+        "ok_title": "覆盖",
+        "cancel_title": "取消",
+        "taxes_updated": "税费已更新"
+    }
+}

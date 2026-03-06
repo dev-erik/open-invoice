@@ -1,0 +1,10 @@
+{
+    "invoice_title": "发票 ",
+    "invoice_number": "编号",
+    "issued_at": "开具日期：",
+    "due_at": "到期日期：",
+    "late_fee": "滞纳金：",
+    "add_late_fee": "添加滞纳金",
+    "modal_issued_at_title": "开具日期",
+    "modal_due_at_title": "到期日期"
+}

@@ -1,0 +1,7 @@
+{
+    "modal_title": "选择标志",
+    "button_text": "从文件中选择",
+    "logo_url": "输入图片网址",
+    "logo_url_err": "标志大小不能超过512KB。",
+    "or": "或"
+}

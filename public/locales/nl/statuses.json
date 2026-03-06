@@ -1,0 +1,9 @@
+{
+    "statuses": {
+        "draft": "concept",
+        "booked": "geboekt",
+        "sent": "verzonden",
+        "paid": "betaald",
+        "cancelled": "geannuleerd"
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "back": "戻る",
+    "book": "計上",
+    "design_and_layout": "デザインとレイアウト",
+    "compact": "コンパクト",
+    "comfortable": "ゆとり",
+    "customize": "カスタマイズ",
+    "download_pdf": "PDFダウンロード",
+    "delete": "削除",
+    "delete_modal": {
+        "title": "請求書を削除",
+        "ok_title": "削除",
+        "cancel_title": "キャンセル"
+    },
+    "notification_deleted": "削除しました"
+}

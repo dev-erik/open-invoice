@@ -1,0 +1,36 @@
+{
+    "title": "あなたの会社",
+    "done": "完了",
+    "updated": "更新しました",
+    "loading": "読み込み中",
+    "tabs": {
+        "general": "基本情報",
+        "invoicing": "請求",
+        "address": "住所",
+        "taxes": "税金"
+    },
+    "general": {
+        "company_name": "会社名",
+        "contact_email": "メール",
+        "contact_phone": "電話",
+        "website": "ウェブサイト"
+    },
+    "invoicing": {
+        "invoice_late_fee": "延滞料 (%)",
+        "invoice_due_days": "支払条件（日）",
+        "currency": "デフォルト通貨"
+    },
+    "address": {
+        "company_address": "会社住所",
+        "company_postal_code": "郵便番号",
+        "company_city": "市区町村",
+        "company_county": "都道府県",
+        "company_country": "国"
+    },
+    "tax_modal": {
+        "title": "現在の請求書行の税金を上書きしますか？",
+        "ok_title": "上書き",
+        "cancel_title": "キャンセル",
+        "taxes_updated": "税金を更新しました"
+    }
+}

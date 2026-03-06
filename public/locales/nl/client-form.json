@@ -1,0 +1,36 @@
+{
+    "title": "Klant",
+    "delete": "Verwijderen",
+    "done": "Klaar",
+    "create": "Aanmaken",
+    "loading": "Laden",
+    "tabs": {
+        "general": "Algemeen",
+        "invoicing": "Facturering",
+        "address": "Adres"
+    },
+    "general": {
+        "company_name": "Bedrijfsnaam",
+        "invoice_email": "E-mail"
+    },
+    "invoicing": {
+        "currency": "Valuta",
+        "rate": "Uurtarief",
+        "has_tax": "Belasting toepassen",
+        "bank_account": "Bankrekening"
+    },
+    "address": {
+        "company_address": "Bedrijfsadres",
+        "company_postal_code": "Postcode",
+        "company_city": "Stad",
+        "company_county": "Provincie",
+        "company_country": "Land"
+    },
+    "delete_modal": {
+        "title": "Klant verwijderen",
+        "ok_title": "Verwijderen",
+        "cancel_title": "Annuleren"
+    },
+    "notification_deleted": "Verwijderd",
+    "notification_updated": "Bijgewerkt"
+}

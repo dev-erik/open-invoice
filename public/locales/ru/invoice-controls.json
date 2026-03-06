@@ -1,0 +1,16 @@
+{
+    "back": "Назад",
+    "book": "Провести",
+    "design_and_layout": "Дизайн и макет",
+    "compact": "Компактный",
+    "comfortable": "Удобный",
+    "customize": "Настроить",
+    "download_pdf": "Скачать PDF",
+    "delete": "Удалить",
+    "delete_modal": {
+        "title": "Удалить счёт",
+        "ok_title": "Удалить",
+        "cancel_title": "Отмена"
+    },
+    "notification_deleted": "Удалено"
+}

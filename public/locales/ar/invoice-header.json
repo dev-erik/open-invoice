@@ -1,0 +1,10 @@
+{
+    "invoice_title": "فاتورة ",
+    "invoice_number": "رقم",
+    "issued_at": "تاريخ الإصدار: ",
+    "due_at": "تاريخ الاستحقاق:",
+    "late_fee": "غرامة التأخير:",
+    "add_late_fee": "إضافة غرامة تأخير",
+    "modal_issued_at_title": "تاريخ الإصدار",
+    "modal_due_at_title": "تاريخ الاستحقاق"
+}

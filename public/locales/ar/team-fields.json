@@ -1,0 +1,10 @@
+{
+    "label": "التسمية",
+    "field": "الحقل",
+    "delete_modal": {
+        "title": "حذف الحقل",
+        "ok_title": "حذف",
+        "cancel_title": "إلغاء"
+    },
+    "notification_delete": "تم الحذف"
+}

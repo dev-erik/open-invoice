@@ -1,0 +1,36 @@
+{
+    "title": "Uw bedrijf",
+    "done": "Klaar",
+    "updated": "Bijgewerkt",
+    "loading": "Laden",
+    "tabs": {
+        "general": "Algemeen",
+        "invoicing": "Facturering",
+        "address": "Adres",
+        "taxes": "Belastingen"
+    },
+    "general": {
+        "company_name": "Bedrijfsnaam",
+        "contact_email": "E-mail",
+        "contact_phone": "Telefoon",
+        "website": "Website"
+    },
+    "invoicing": {
+        "invoice_late_fee": "Boeterente (%)",
+        "invoice_due_days": "Betalingstermijn, dagen",
+        "currency": "Standaard valuta"
+    },
+    "address": {
+        "company_address": "Bedrijfsadres",
+        "company_postal_code": "Postcode",
+        "company_city": "Stad",
+        "company_county": "Provincie",
+        "company_country": "Land"
+    },
+    "tax_modal": {
+        "title": "Belastingen voor huidige factuurregels overschrijven?",
+        "ok_title": "Overschrijven",
+        "cancel_title": "Annuleren",
+        "taxes_updated": "Belastingen bijgewerkt"
+    }
+}

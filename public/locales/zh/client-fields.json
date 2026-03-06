@@ -1,0 +1,10 @@
+{
+    "label": "标签",
+    "field": "字段",
+    "delete_modal": {
+        "title": "删除字段",
+        "ok_title": "删除",
+        "cancel_title": "取消"
+    },
+    "notification_deleted": "已删除"
+}

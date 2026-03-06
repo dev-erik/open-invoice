@@ -1,0 +1,8 @@
+{
+    "client_address": "Adres",
+    "client_postal_code": "Postcode",
+    "client_city": "Stad",
+    "client_county": "Provincie",
+    "client_country": "Land",
+    "client_email": "E-mail klant"
+}

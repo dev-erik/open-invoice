@@ -1,0 +1,36 @@
+{
+    "title": "Ваша компания",
+    "done": "Готово",
+    "updated": "Обновлено",
+    "loading": "Загрузка",
+    "tabs": {
+        "general": "Основное",
+        "invoicing": "Выставление счетов",
+        "address": "Адрес",
+        "taxes": "Налоги"
+    },
+    "general": {
+        "company_name": "Название компании",
+        "contact_email": "Эл. почта",
+        "contact_phone": "Телефон",
+        "website": "Сайт"
+    },
+    "invoicing": {
+        "invoice_late_fee": "Пеня (%)",
+        "invoice_due_days": "Срок оплаты, дней",
+        "currency": "Валюта по умолчанию"
+    },
+    "address": {
+        "company_address": "Адрес компании",
+        "company_postal_code": "Почтовый индекс",
+        "company_city": "Город",
+        "company_county": "Область/Штат",
+        "company_country": "Страна"
+    },
+    "tax_modal": {
+        "title": "Перезаписать налоги для текущих строк счёта?",
+        "ok_title": "Перезаписать",
+        "cancel_title": "Отмена",
+        "taxes_updated": "Налоги обновлены"
+    }
+}

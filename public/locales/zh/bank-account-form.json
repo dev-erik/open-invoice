@@ -1,0 +1,9 @@
+{
+    "title": "银行账户",
+    "bank_name": "银行名称",
+    "account_no": "银行账户信息",
+    "loading": "加载中",
+    "done": "完成",
+    "create": "创建",
+    "notification_updated": "已更新"
+}

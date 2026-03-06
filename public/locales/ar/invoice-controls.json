@@ -1,0 +1,16 @@
+{
+    "back": "رجوع",
+    "book": "تسجيل",
+    "design_and_layout": "التصميم والتنسيق",
+    "compact": "مضغوط",
+    "comfortable": "مريح",
+    "customize": "تخصيص",
+    "download_pdf": "تحميل PDF",
+    "delete": "حذف",
+    "delete_modal": {
+        "title": "حذف الفاتورة",
+        "ok_title": "حذف",
+        "cancel_title": "إلغاء"
+    },
+    "notification_deleted": "تم الحذف"
+}

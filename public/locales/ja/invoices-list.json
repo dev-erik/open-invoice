@@ -1,0 +1,7 @@
+{
+    "invoice_number": "番号",
+    "client": "クライアント",
+    "issued_at": "発行日",
+    "total": "合計",
+    "status": "ステータス"
+}

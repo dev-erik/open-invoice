@@ -1,0 +1,9 @@
+{
+    "statuses": {
+        "draft": "草稿",
+        "booked": "已记账",
+        "sent": "已发送",
+        "paid": "已付款",
+        "cancelled": "已取消"
+    }
+}

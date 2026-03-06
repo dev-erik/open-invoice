@@ -1,0 +1,7 @@
+{
+    "invoice_number": "编号",
+    "client": "客户",
+    "issued_at": "开具日期",
+    "total": "总计",
+    "status": "状态"
+}

@@ -1,0 +1,10 @@
+{
+    "label": "ラベル",
+    "field": "フィールド",
+    "delete_modal": {
+        "title": "フィールドを削除",
+        "ok_title": "削除",
+        "cancel_title": "キャンセル"
+    },
+    "notification_deleted": "削除しました"
+}

@@ -1,0 +1,10 @@
+{
+    "label": "ラベル",
+    "tax": "税金",
+    "delete_modal": {
+        "title": "税金を削除",
+        "ok_title": "削除",
+        "cancel_title": "キャンセル"
+    },
+    "notification_deleted": "削除しました"
+}

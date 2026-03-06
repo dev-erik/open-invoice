@@ -1,0 +1,7 @@
+{
+    "invoice_number": "رقم",
+    "client": "العميل",
+    "issued_at": "تاريخ الإصدار",
+    "total": "الإجمالي",
+    "status": "الحالة"
+}

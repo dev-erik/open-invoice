@@ -1,0 +1,10 @@
+{
+    "label": "Label",
+    "tax": "Belasting",
+    "delete_modal": {
+        "title": "Belasting verwijderen",
+        "ok_title": "Verwijderen",
+        "cancel_title": "Annuleren"
+    },
+    "notification_deleted": "Verwijderd"
+}

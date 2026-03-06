@@ -1,0 +1,36 @@
+{
+    "title": "客户",
+    "delete": "删除",
+    "done": "完成",
+    "create": "创建",
+    "loading": "加载中",
+    "tabs": {
+        "general": "基本信息",
+        "invoicing": "开票",
+        "address": "地址"
+    },
+    "general": {
+        "company_name": "公司名称",
+        "invoice_email": "电子邮件"
+    },
+    "invoicing": {
+        "currency": "货币",
+        "rate": "小时费率",
+        "has_tax": "应用税费",
+        "bank_account": "银行账户"
+    },
+    "address": {
+        "company_address": "公司地址",
+        "company_postal_code": "邮政编码",
+        "company_city": "城市",
+        "company_county": "省/州",
+        "company_country": "国家"
+    },
+    "delete_modal": {
+        "title": "删除客户",
+        "ok_title": "删除",
+        "cancel_title": "取消"
+    },
+    "notification_deleted": "已删除",
+    "notification_updated": "已更新"
+}

@@ -1,0 +1,36 @@
+{
+    "title": "العميل",
+    "delete": "حذف",
+    "done": "تم",
+    "create": "إنشاء",
+    "loading": "جارٍ التحميل",
+    "tabs": {
+        "general": "عام",
+        "invoicing": "الفوترة",
+        "address": "العنوان"
+    },
+    "general": {
+        "company_name": "اسم الشركة",
+        "invoice_email": "البريد الإلكتروني"
+    },
+    "invoicing": {
+        "currency": "العملة",
+        "rate": "سعر الساعة",
+        "has_tax": "تطبيق الضرائب",
+        "bank_account": "الحساب البنكي"
+    },
+    "address": {
+        "company_address": "عنوان الشركة",
+        "company_postal_code": "الرمز البريدي",
+        "company_city": "المدينة",
+        "company_county": "المحافظة/الولاية",
+        "company_country": "البلد"
+    },
+    "delete_modal": {
+        "title": "حذف العميل",
+        "ok_title": "حذف",
+        "cancel_title": "إلغاء"
+    },
+    "notification_deleted": "تم الحذف",
+    "notification_updated": "تم التحديث"
+}

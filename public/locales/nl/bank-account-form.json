@@ -1,0 +1,9 @@
+{
+    "title": "Bankrekening",
+    "bank_name": "Banknaam",
+    "account_no": "Bankrekeninggegevens",
+    "loading": "Laden",
+    "done": "Klaar",
+    "create": "Aanmaken",
+    "notification_updated": "Bijgewerkt"
+}

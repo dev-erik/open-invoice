@@ -1,0 +1,10 @@
+{
+    "your_company_name": "会社名",
+    "address": "住所",
+    "postal_code": "郵便番号",
+    "city": "市区町村",
+    "county": "都道府県",
+    "country": "国",
+    "your_email": "メールアドレス",
+    "vat_code": "消費税番号"
+}

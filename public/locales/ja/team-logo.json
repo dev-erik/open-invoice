@@ -1,0 +1,7 @@
+{
+    "modal_title": "ロゴを選択",
+    "button_text": "ファイルから選択",
+    "logo_url": "画像URLを入力",
+    "logo_url_err": "ロゴは512KB以下にしてください。",
+    "or": "または"
+}

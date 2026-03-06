@@ -1,0 +1,10 @@
+{
+    "invoice_title": "Счёт ",
+    "invoice_number": "№",
+    "issued_at": "Дата выставления: ",
+    "due_at": "Срок оплаты:",
+    "late_fee": "Пеня:",
+    "add_late_fee": "Добавить пеню",
+    "modal_issued_at_title": "Дата выставления",
+    "modal_due_at_title": "Срок оплаты"
+}

@@ -1,0 +1,9 @@
+{
+    "title": "حساب بنكي",
+    "bank_name": "اسم البنك",
+    "account_no": "تفاصيل الحساب البنكي",
+    "loading": "جارٍ التحميل",
+    "done": "تم",
+    "create": "إنشاء",
+    "notification_updated": "تم التحديث"
+}

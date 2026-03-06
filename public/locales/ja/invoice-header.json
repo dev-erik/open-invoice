@@ -1,0 +1,10 @@
+{
+    "invoice_title": "請求書 ",
+    "invoice_number": "番号",
+    "issued_at": "発行日：",
+    "due_at": "支払期限：",
+    "late_fee": "延滞料：",
+    "add_late_fee": "延滞料を追加",
+    "modal_issued_at_title": "発行日",
+    "modal_due_at_title": "支払期限"
+}

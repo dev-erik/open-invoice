@@ -1,0 +1,6 @@
+{
+    "title": "Gegevens importeren",
+    "warning": "Uw huidige gegevens worden gewist en overschreven met de geïmporteerde gegevens!",
+    "button_text": "Selecteer importbestand",
+    "import-error": "Ongeldig JSON-formaat"
+}

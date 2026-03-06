@@ -1,0 +1,9 @@
+{
+    "statuses": {
+        "draft": "下書き",
+        "booked": "計上済",
+        "sent": "送信済",
+        "paid": "支払済",
+        "cancelled": "取消済"
+    }
+}

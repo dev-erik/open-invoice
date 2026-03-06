@@ -1,0 +1,8 @@
+{
+    "client_address": "住所",
+    "client_postal_code": "郵便番号",
+    "client_city": "市区町村",
+    "client_county": "都道府県",
+    "client_country": "国",
+    "client_email": "クライアントのメール"
+}

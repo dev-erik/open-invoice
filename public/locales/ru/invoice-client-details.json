@@ -1,0 +1,8 @@
+{
+    "client_address": "Адрес",
+    "client_postal_code": "Почтовый индекс",
+    "client_city": "Город",
+    "client_county": "Область/Штат",
+    "client_country": "Страна",
+    "client_email": "Эл. почта клиента"
+}

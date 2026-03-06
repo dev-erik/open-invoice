@@ -33,6 +33,7 @@ export const vatRates = [
   { country: 'Switzerland', code: 'CH', rate: 8.1, taxName: 'VAT' },
   { country: 'Norway', code: 'NO', rate: 25, taxName: 'VAT' },
   { country: 'Iceland', code: 'IS', rate: 24, taxName: 'VAT' },
+  { country: 'Russia', code: 'RU', rate: 20, taxName: 'VAT' },
   { country: 'Turkey', code: 'TR', rate: 20, taxName: 'VAT' },
 
   // Asia-Pacific
@@ -48,9 +49,11 @@ export const vatRates = [
   { country: 'Philippines', code: 'PH', rate: 12, taxName: 'VAT' },
   { country: 'Malaysia', code: 'MY', rate: 8, taxName: 'Sales Tax' },
   { country: 'Indonesia', code: 'ID', rate: 11, taxName: 'VAT' },
+  { country: 'Bangladesh', code: 'BD', rate: 15, taxName: 'VAT' },
   { country: 'China', code: 'CN', rate: 13, taxName: 'VAT' },
 
   // Middle East & Africa
+  { country: 'Iran', code: 'IR', rate: 10, taxName: 'VAT' },
   { country: 'UAE', code: 'AE', rate: 5, taxName: 'VAT' },
   { country: 'Saudi Arabia', code: 'SA', rate: 15, taxName: 'VAT' },
   { country: 'Bahrain', code: 'BH', rate: 10, taxName: 'VAT' },

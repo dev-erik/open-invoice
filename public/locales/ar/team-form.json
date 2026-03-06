@@ -1,0 +1,36 @@
+{
+    "title": "شركتك",
+    "done": "تم",
+    "updated": "تم التحديث",
+    "loading": "جارٍ التحميل",
+    "tabs": {
+        "general": "عام",
+        "invoicing": "الفوترة",
+        "address": "العنوان",
+        "taxes": "الضرائب"
+    },
+    "general": {
+        "company_name": "اسم الشركة",
+        "contact_email": "البريد الإلكتروني",
+        "contact_phone": "الهاتف",
+        "website": "الموقع"
+    },
+    "invoicing": {
+        "invoice_late_fee": "غرامة التأخير (%)",
+        "invoice_due_days": "شروط الدفع، أيام",
+        "currency": "العملة الافتراضية"
+    },
+    "address": {
+        "company_address": "عنوان الشركة",
+        "company_postal_code": "الرمز البريدي",
+        "company_city": "المدينة",
+        "company_county": "المحافظة/الولاية",
+        "company_country": "البلد"
+    },
+    "tax_modal": {
+        "title": "استبدال الضرائب لصفوف الفاتورة الحالية؟",
+        "ok_title": "استبدال",
+        "cancel_title": "إلغاء",
+        "taxes_updated": "تم تحديث الضرائب"
+    }
+}

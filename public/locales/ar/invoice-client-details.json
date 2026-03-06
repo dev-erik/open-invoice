@@ -1,0 +1,8 @@
+{
+    "client_address": "العنوان",
+    "client_postal_code": "الرمز البريدي",
+    "client_city": "المدينة",
+    "client_county": "المحافظة/الولاية",
+    "client_country": "البلد",
+    "client_email": "بريد العميل"
+}

@@ -1,0 +1,16 @@
+{
+    "back": "Terug",
+    "book": "Boeken",
+    "design_and_layout": "Ontwerp & indeling",
+    "compact": "Compact",
+    "comfortable": "Comfortabel",
+    "customize": "Aanpassen",
+    "download_pdf": "PDF downloaden",
+    "delete": "Verwijderen",
+    "delete_modal": {
+        "title": "Factuur verwijderen",
+        "ok_title": "Verwijderen",
+        "cancel_title": "Annuleren"
+    },
+    "notification_deleted": "Verwijderd"
+}

@@ -1,0 +1,36 @@
+{
+    "title": "Клиент",
+    "delete": "Удалить",
+    "done": "Готово",
+    "create": "Создать",
+    "loading": "Загрузка",
+    "tabs": {
+        "general": "Основное",
+        "invoicing": "Выставление счетов",
+        "address": "Адрес"
+    },
+    "general": {
+        "company_name": "Название компании",
+        "invoice_email": "Эл. почта"
+    },
+    "invoicing": {
+        "currency": "Валюта",
+        "rate": "Почасовая ставка",
+        "has_tax": "Применить налоги",
+        "bank_account": "Банковский счёт"
+    },
+    "address": {
+        "company_address": "Адрес компании",
+        "company_postal_code": "Почтовый индекс",
+        "company_city": "Город",
+        "company_county": "Область/Штат",
+        "company_country": "Страна"
+    },
+    "delete_modal": {
+        "title": "Удалить клиента",
+        "ok_title": "Удалить",
+        "cancel_title": "Отмена"
+    },
+    "notification_deleted": "Удалено",
+    "notification_updated": "Обновлено"
+}

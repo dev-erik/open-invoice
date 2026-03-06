@@ -1,0 +1,16 @@
+{
+    "back": "返回",
+    "book": "记账",
+    "design_and_layout": "设计与布局",
+    "compact": "紧凑",
+    "comfortable": "舒适",
+    "customize": "自定义",
+    "download_pdf": "下载PDF",
+    "delete": "删除",
+    "delete_modal": {
+        "title": "删除发票",
+        "ok_title": "删除",
+        "cancel_title": "取消"
+    },
+    "notification_deleted": "已删除"
+}

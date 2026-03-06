@@ -1,0 +1,8 @@
+{
+    "client_address": "地址",
+    "client_postal_code": "邮政编码",
+    "client_city": "城市",
+    "client_county": "省/州",
+    "client_country": "国家",
+    "client_email": "客户邮箱"
+}

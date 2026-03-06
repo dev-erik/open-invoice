@@ -1,0 +1,10 @@
+{
+    "label": "Название",
+    "tax": "Налог",
+    "delete_modal": {
+        "title": "Удалить налог",
+        "ok_title": "Удалить",
+        "cancel_title": "Отмена"
+    },
+    "notification_deleted": "Удалено"
+}

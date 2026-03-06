@@ -1,0 +1,7 @@
+{
+    "modal_title": "Logo kiezen",
+    "button_text": "Selecteer uit bestanden",
+    "logo_url": "Voer afbeelding-URL in",
+    "logo_url_err": "Logo moet kleiner zijn dan 512kb.",
+    "or": "of"
+}
