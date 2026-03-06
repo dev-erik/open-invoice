@@ -1,10 +1,10 @@
 {
-    "your_company_name": "Votre nom de société",
+    "your_company_name": "Nom de votre entreprise",
     "address": "Adresse",
     "postal_code": "Code postal",
     "city": "Ville",
-    "county": "Province/Région",
-    "country": "Country",
-    "your_email": "Your email",
+    "county": "Département/État",
+    "country": "Pays",
+    "your_email": "Votre e-mail",
     "vat_code": "N° TVA / ID fiscal"
 }
