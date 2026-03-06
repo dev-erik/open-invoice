@@ -36,6 +36,12 @@ See plan file: `.cursor/plans/open_invoice_migration_57ee90a5.plan.md`
 - Regenerated `package-lock.json` to remove old `serverless-invoices` name
 - Build passes cleanly
 
+### Phase 8c — Tag v1.0.0 + GitHub Release COMPLETE
+- Committed branding cleanup: `[chore][ui] Remove old Moku branding from footer and locales`
+- Re-tagged v1.0.0 at commit `68e3c8f`
+- Pushed branch + tag to `dev-erik/open-invoice`
+- Recreated GitHub release
+
 ### PROJECT COMPLETE
 - Release: https://github.com/dev-erik/open-invoice/releases/tag/v1.0.0
 - Branch: vue3-migration
