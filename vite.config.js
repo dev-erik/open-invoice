@@ -17,7 +17,6 @@ export default defineConfig({
           'import',
           'global-builtin',
           'color-functions',
-          'mixed-decls',
           'slash-div',
           'abs-percent',
           'if-function',

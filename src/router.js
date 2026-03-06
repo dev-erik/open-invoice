@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { i18next, initialized } from '@/config/i18n.config';
+import { useTeamsStore } from '@/store/teams';
 import config from '@/config/app.config';
 
 const routes = [
@@ -9,7 +10,6 @@ const routes = [
     redirect: 'invoices',
     component: () => import('@/views/dashboard/Dashboard.vue'),
     beforeEnter: async (to, from, next) => {
-      const { useTeamsStore } = await import('@/store/teams');
       const teamsStore = useTeamsStore();
       await teamsStore.init();
       next();

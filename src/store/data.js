@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import localForage from 'localforage';
 import MigrationService from '@/services/migration.service';
 import { download } from '@/utils/helpers';
+import { useTeamsStore } from '@/store/teams';
 
 const ALLOWED_KEYS = [
   'invoices', 'invoice_rows', 'invoice_row_taxes',
@@ -35,7 +36,6 @@ export const useDataStore = defineStore('data', {
       download(JSON.stringify(data), 'serverless-invoices.json', 'application/json');
     },
     async importJson(data) {
-      const { useTeamsStore } = await import('@/store/teams');
       const teamsStore = useTeamsStore();
 
       const results = [];
