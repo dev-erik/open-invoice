@@ -32,10 +32,19 @@ export default {
       download(JSON.stringify(data), 'serverless-invoices.json', 'application/json');
     },
     async importJson({ dispatch }, data) {
+      const ALLOWED_KEYS = [
+        'invoices', 'invoice_rows', 'invoice_row_taxes',
+        'invoice_client_fields', 'invoice_team_fields',
+        'clients', 'client_fields',
+        'bank_accounts', 'taxes',
+        'team', 'team_fields',
+      ];
       const results = [];
-      Object.keys(data).forEach((key) => {
-        results.push(localForage.setItem(key, data[key]));
-      });
+      Object.keys(data)
+        .filter(key => ALLOWED_KEYS.includes(key))
+        .forEach((key) => {
+          results.push(localForage.setItem(key, data[key]));
+        });
       await Promise.all(results);
       await dispatch('teams/terminate', null, { root: true });
       return dispatch('teams/init', null, { root: true });

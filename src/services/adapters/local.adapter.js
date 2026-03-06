@@ -13,8 +13,8 @@ class LocalAdapter {
     }
 
     if (parts.length === 2) {
-      return (await storage.getItem(parts[0]))
-        .find(it => it.id === parts[1]);
+      const items = (await storage.getItem(parts[0])) || [];
+      return items.find(it => it.id === parts[1]) || null;
     }
 
     return null;
@@ -35,9 +35,10 @@ class LocalAdapter {
     const parts = uri.split('/');
 
     if (parts.length === 2) {
-      const items = await this.get(parts[0]);
+      const items = (await this.get(parts[0])) || [];
 
       const index = items.findIndex(it => it.id === parts[1]);
+      if (index === -1) return null;
       removeVuexORMFlags(data);
       items[index] = data;
 
@@ -57,9 +58,10 @@ class LocalAdapter {
     const parts = uri.split('/');
 
     if (parts.length === 2) {
-      const items = await this.get(parts[0]);
+      const items = (await this.get(parts[0])) || [];
 
       const index = items.findIndex(it => it.id === parts[1]);
+      if (index === -1) return null;
       items.splice(index, 1);
 
       return storage.setItem(parts[0], items);

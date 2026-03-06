@@ -58,9 +58,14 @@ export function validate(requiredFields, input) {
   return { errors };
 }
 
+const MAX_FIELD_LENGTH = 10000;
+
 export function validateField(input, field, label) {
   if (!input.hasOwnProperty(field) || input[field] === null || input[field].length === 0) {
     return [`${label} is required`];
+  }
+  if (typeof input[field] === 'string' && input[field].length > MAX_FIELD_LENGTH) {
+    return [`${label} exceeds maximum length`];
   }
   return null;
 }

@@ -64,9 +64,16 @@ export default {
       styleEl.setAttribute('type', 'text/css');
       document.head.appendChild(styleEl);
     },
+    sanitizeCss(css) {
+      if (!css) return '';
+      const forbidden = /@import|url\s*\(|expression\s*\(|javascript:|behavior\s*:|binding\s*:|\\|\/\*/gi;
+      return css.replace(forbidden, '/* blocked */');
+    },
     updateStyleEl(styles) {
       const styleEl = document.getElementById('custom-styles');
-      styleEl.innerHTML = styles;
+      if (styleEl) {
+        styleEl.textContent = this.sanitizeCss(styles);
+      }
     },
     close() {
       this.isOpen = false;

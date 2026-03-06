@@ -30,10 +30,10 @@ http.interceptors.response.use((response) => {
 }, (error) => {
   app.$Progress.finish();
 
-  // Server down
-  if (error.response.status >= 500) {
+  if (error.response && error.response.status >= 500) {
     NotificationService.error('Server Unavailable.');
-    return Promise.reject(error);
+  } else if (!error.response) {
+    NotificationService.error('Network error. Check your connection.');
   }
 
   return Promise.reject(error);
