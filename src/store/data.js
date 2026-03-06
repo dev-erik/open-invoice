@@ -33,7 +33,7 @@ export const useDataStore = defineStore('data', {
         data[key] = results[index];
       });
 
-      download(JSON.stringify(data), 'serverless-invoices.json', 'application/json');
+      download(JSON.stringify(data), 'open-invoice-export.json', 'application/json');
     },
     async importJson(data) {
       const teamsStore = useTeamsStore();

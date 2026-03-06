@@ -1,6 +1,6 @@
 {
-  "name": "serverless-invoices",
-  "version": "0.1.0",
+  "name": "open-invoice",
+  "version": "1.0.0",
   "private": false,
   "type": "module",
   "scripts": {
