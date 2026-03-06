@@ -1,5 +1,5 @@
 import axios from 'axios';
-import app from '@/main';
+import NProgress from 'nprogress';
 import config from '@/config/app.config';
 import NotificationService from '@/services/notification.service';
 import { removeVuexORMFlags } from '@/utils/helpers';
@@ -13,22 +13,22 @@ const http = axios.create({
 
 http.interceptors.request.use((request) => {
   if (typeof request.hideLoading === 'undefined' || !request.hideLoading) {
-    app.$Progress.start();
+    NProgress.start();
   }
   return request;
 }, (error) => {
-  app.$Progress.finish();
+  NProgress.done();
 
   NotificationService.error('Network error. Check your connection');
   return Promise.reject(error);
 });
 
 http.interceptors.response.use((response) => {
-  app.$Progress.finish();
+  NProgress.done();
 
   return response;
 }, (error) => {
-  app.$Progress.finish();
+  NProgress.done();
 
   if (error.response && error.response.status >= 500) {
     NotificationService.error('Server Unavailable.');

@@ -8,7 +8,9 @@
         <span ref="editable"
               class="editable__item"
               :contenteditable="!disabled"
-              v-on="listeners"
+              @input="onInput"
+              @focusin="onFocusIn"
+              @focusout="onFocusOut"
               :class="{'position-absolute': !tmpVal || (!tmpVal && !isFocused)}"
         ></span>
         <span v-if="!tmpVal" @click="focus"
@@ -19,11 +21,11 @@
 </template>
 
 <script>
-import AppError from '@/components/form/AppError';
+import AppError from '@/components/form/AppError.vue';
 
 export default {
   props: {
-    value: {
+    modelValue: {
       type: String,
       default: '',
     },
@@ -38,6 +40,7 @@ export default {
     errors: {},
     field: {},
   },
+  emits: ['update:modelValue', 'change'],
   components: {
     AppError,
   },
@@ -45,33 +48,23 @@ export default {
     return {
       focusInVal: null,
       tmpVal: null,
+      isFocused: false,
     };
   },
-  computed: {
-    listeners() {
-      return {
-        ...this.$listeners,
-        input: this.onInput,
-        focusin: this.onFocusIn,
-        focusout: this.onFocusOut,
-        isFocused: false,
-      };
-    },
-  },
   watch: {
-    value() {
-      this.$refs.editable.innerText = this.value;
-      this.tmpVal = this.value;
+    modelValue() {
+      this.$refs.editable.innerText = this.modelValue;
+      this.tmpVal = this.modelValue;
     },
   },
   mounted() {
-    this.$refs.editable.innerText = this.value;
-    this.tmpVal = this.value;
+    this.$refs.editable.innerText = this.modelValue;
+    this.tmpVal = this.modelValue;
   },
   methods: {
     onInput(e) {
       this.tmpVal = e.target.innerText;
-      this.$emit('input', this.tmpVal);
+      this.$emit('update:modelValue', this.tmpVal);
     },
     onFocusIn() {
       this.isFocused = true;

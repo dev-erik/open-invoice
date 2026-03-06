@@ -1,40 +1,31 @@
 <template>
-    <BModal v-model="isOpen"
-            centered
-            hide-footer
-            hide-header
-            size="md"
-            content-class="bg-base dp--24">
-        <BankAccountForm @done="close()"/>
-    </BModal>
+    <teleport to="body">
+        <div v-if="isOpen" class="modal d-block" tabindex="-1" @click.self="close">
+            <div class="modal-dialog modal-dialog-centered modal-md">
+                <div class="modal-content bg-base dp--24">
+                    <BankAccountForm @done="close()"/>
+                </div>
+            </div>
+        </div>
+        <div v-if="isOpen" class="modal-backdrop fade show"></div>
+    </teleport>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { BModal } from 'bootstrap-vue';
-import BankAccountForm from '@/components/bank-accounts/BankAccountForm';
+import { useBankAccountsStore } from '@/store/bank-accounts';
+import BankAccountForm from '@/components/bank-accounts/BankAccountForm.vue';
 
 export default {
   components: {
-    BModal,
     BankAccountForm,
   },
   computed: {
-    isOpen: {
-      get() {
-        return this.$store.state.bankAccounts.isModalOpen;
-      },
-      set(val) {
-        if (!val) {
-          this.$router.push({ query: {} });
-          this.$store.dispatch('bankAccounts/getBankAccounts');
-        }
-        this.$store.commit('bankAccounts/isModalOpen', val);
-      },
+    isOpen() {
+      return useBankAccountsStore().isModalOpen;
     },
-    ...mapGetters({
-      bankAccount: 'bankAccounts/bankAccount',
-    }),
+    bankAccount() {
+      return useBankAccountsStore().bankAccount;
+    },
   },
   watch: {
     '$route.query.bankAccountId'() {
@@ -46,19 +37,22 @@ export default {
   },
   methods: {
     getBankAccount() {
+      const store = useBankAccountsStore();
       const query = this.$route.query;
-      if (query.hasOwnProperty('bankAccountId')) {
+      if (Object.prototype.hasOwnProperty.call(query, 'bankAccountId')) {
         if ((this.bankAccount && this.bankAccount.id !== query.bankAccountId) || !this.bankAccount) {
-          this.$store.dispatch('bankAccounts/getBankAccount', query.bankAccountId);
+          store.getBankAccount(query.bankAccountId);
         }
-
-        this.$store.commit('bankAccounts/isModalOpen', true);
+        store.isModalOpen = true;
       } else {
-        this.$store.commit('bankAccounts/isModalOpen', false);
+        store.isModalOpen = false;
       }
     },
     close() {
-      this.isOpen = false;
+      const store = useBankAccountsStore();
+      this.$router.push({ query: {} });
+      store.getBankAccounts();
+      store.isModalOpen = false;
     },
   },
 };

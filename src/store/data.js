@@ -1,17 +1,20 @@
+import { defineStore } from 'pinia';
 import localForage from 'localforage';
 import MigrationService from '@/services/migration.service';
-import { download } from '../utils/helpers';
+import { download } from '@/utils/helpers';
 
-export default {
-  namespaced: true,
-  state: {
+const ALLOWED_KEYS = [
+  'invoices', 'invoice_rows', 'invoice_row_taxes',
+  'invoice_client_fields', 'invoice_team_fields',
+  'clients', 'client_fields',
+  'bank_accounts', 'taxes',
+  'team', 'team_fields',
+];
+
+export const useDataStore = defineStore('data', {
+  state: () => ({
     isImportModalOpen: false,
-  },
-  mutations: {
-    isImportModalOpen(state, isOpen) {
-      state.isImportModalOpen = isOpen;
-    },
-  },
+  }),
   actions: {
     async migrate() {
       return MigrationService.migrate();
@@ -31,14 +34,10 @@ export default {
 
       download(JSON.stringify(data), 'serverless-invoices.json', 'application/json');
     },
-    async importJson({ dispatch }, data) {
-      const ALLOWED_KEYS = [
-        'invoices', 'invoice_rows', 'invoice_row_taxes',
-        'invoice_client_fields', 'invoice_team_fields',
-        'clients', 'client_fields',
-        'bank_accounts', 'taxes',
-        'team', 'team_fields',
-      ];
+    async importJson(data) {
+      const { useTeamsStore } = await import('@/store/teams');
+      const teamsStore = useTeamsStore();
+
       const results = [];
       Object.keys(data)
         .filter(key => ALLOWED_KEYS.includes(key))
@@ -46,9 +45,8 @@ export default {
           results.push(localForage.setItem(key, data[key]));
         });
       await Promise.all(results);
-      await dispatch('teams/terminate', null, { root: true });
-      return dispatch('teams/init', null, { root: true });
+      teamsStore.terminate();
+      return teamsStore.init();
     },
   },
-  getters: {},
-};
+});

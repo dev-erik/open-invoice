@@ -1,8 +1,7 @@
-import app from '../main';
+import { defineStore } from 'pinia';
 
-export default {
-  namespaced: true,
-  state: {
+export const useLanguageStore = defineStore('language', {
+  state: () => ({
     lang: null,
     all: [
       { name: 'English', code: 'en' },
@@ -17,20 +16,15 @@ export default {
       { name: 'Indonesian', code: 'id' },
       { name: 'Korean', code: 'kr' },
     ],
-  },
-  mutations: {
-    lang(state, lang) {
-      state.lang = lang;
-    },
-  },
+  }),
   actions: {
-    changeLanguage({ commit }, lang) {
-      app.$i18n.i18next.changeLanguage(lang.code);
-      app.$router.push({ query: { ...app.$route.query, lang: lang.code } });
-      commit('lang', lang);
+    changeLanguage(lang, { i18next, router, route }) {
+      i18next.changeLanguage(lang.code);
+      router.push({ query: { ...route.query, lang: lang.code } });
+      this.lang = lang;
     },
-    initLanguage({ commit, state }, code) {
-      commit('lang', state.all.find(lang => lang.code === code));
+    initLanguage(code) {
+      this.lang = this.all.find(lang => lang.code === code) || null;
     },
   },
-};
+});

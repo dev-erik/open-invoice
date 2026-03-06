@@ -1,53 +1,52 @@
 <template>
     <tfoot>
     <tr class="text-right">
-        <td :colspan="colspan">{{ $t('subtotal') }}</td>
-        <td>{{ invoice.subTotal | currency }}</td>
+        <td :colspan="colspan">{{ $t('invoice-totals:subtotal') }}</td>
+        <td>{{ formatCurrency(invoice.subTotal) }}</td>
     </tr>
     <tr class="text-right" v-for="tax in invoice.taxes" :key="tax.label">
         <td :colspan="colspan">
             {{ tax.label }} ({{ tax.rate }}%)
         </td>
-        <td>{{ tax.total | currency }}</td>
+        <td>{{ formatCurrency(tax.total) }}</td>
     </tr>
     <tr class="text-right">
         <th :colspan="colspan">
-            {{ $t('total') }}
+            {{ $t('invoice-totals:total') }}
             <AppEditable :value="invoice.currency"
                          :errors="errors"
                          field="currency"
-                         :placeholder="$t('add_currency')"
+                         :placeholder="$t('invoice-totals:add_currency')"
                          @change="updateProp({ currency: $event })"/>
         </th>
-        <th class="text-nowrap">{{ invoice.total | currency }}</th>
+        <th class="text-nowrap">{{ formatCurrency(invoice.total) }}</th>
     </tr>
     </tfoot>
 </template>
 <script>
-import { mapGetters } from 'vuex';
-import AppEditable from '../form/AppEditable';
-import { formatDate } from '../../filters/date.filter';
-import { formatCurrency } from '../../filters/currency.filter';
+import { useInvoiceRowsStore } from '@/store/invoice-rows';
+import AppEditable from '@/components/form/AppEditable.vue';
+import { formatCurrency } from '@/filters/currency.filter';
 
 export default {
-  i18nOptions: { namespaces: 'invoice-totals' },
   props: ['invoice', 'errors'],
   components: {
     AppEditable,
   },
-  filters: {
-    date: formatDate,
-    currency: formatCurrency,
+  setup() {
+    const invoiceRowsStore = useInvoiceRowsStore();
+    return { invoiceRowsStore };
   },
   computed: {
-    ...mapGetters({
-      taxes: 'invoiceRows/taxes',
-    }),
+    taxes() {
+      return this.invoiceRowsStore.taxes;
+    },
     colspan() {
       return 4 + this.taxes.length;
     },
   },
   methods: {
+    formatCurrency,
     updateProp(props) {
       this.$emit('update', props);
     },

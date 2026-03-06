@@ -2,121 +2,144 @@
     <div>
         <div class="row">
             <div class="col-12 d-flex justify-content-between">
-                <h4>{{ $t('title') }}</h4>
+                <h4>{{ $t('client-form:title') }}</h4>
                 <div v-if="client">
                     <div v-if="!isNew">
-                        <b-dropdown variant="link" size="sm" no-caret right>
-                            <template slot="button-content">
+                        <div class="dropdown d-inline-block">
+                            <button class="btn btn-sm btn-link" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="material-icons">more_vert</i>
-                            </template>
-                            <b-dropdown-item-button @click="deleteClient">{{ $t('delete') }}</b-dropdown-item-button>
-                        </b-dropdown>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <button class="dropdown-item" @click="deleteClient">
+                                        {{ $t('client-form:delete') }}
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                         <button class="btn btn-sm btn-primary"
-                                @click="$emit('done')">{{ $t('done') }}
+                                @click="$emit('done')">{{ $t('client-form:done') }}
                         </button>
                     </div>
-                    <button v-else class="btn btn-primary ml-2"
+                    <button v-else class="btn btn-primary ms-2"
                             :disabled="loading"
-                            @click="createClient">{{ $t('create') }}
+                            @click="createClient">{{ $t('client-form:create') }}
                     </button>
                 </div>
             </div>
         </div>
 
-        <b-tabs v-if="client" nav-class="nav-tabs--simple mb-4" active-tab-class="active" class="row">
-            <b-tab :title="$t('tabs.general')" class="col-12">
+        <div v-if="client">
+            <ul class="nav nav-tabs nav-tabs--simple mb-4" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" :class="{ active: activeTab === 'general' }"
+                            @click="activeTab = 'general'" type="button" role="tab">
+                        {{ $t('client-form:tabs.general') }}
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" :class="{ active: activeTab === 'invoicing' }"
+                            @click="activeTab = 'invoicing'" type="button" role="tab">
+                        {{ $t('client-form:tabs.invoicing') }}
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" :class="{ active: activeTab === 'address' }"
+                            @click="activeTab = 'address'" type="button" role="tab">
+                        {{ $t('client-form:tabs.address') }}
+                    </button>
+                </li>
+            </ul>
+
+            <div v-show="activeTab === 'general'" class="row">
                 <div class="row">
                     <AppInput :value="client.company_name" @change="updateProp({ company_name: $event })"
-                              :label="$t('general.company_name')" field="company_name" :errors="errors" class="col-12"/>
+                              :label="$t('client-form:general.company_name')" field="company_name" :errors="errors" class="col-12"/>
                     <AppInput :value="client.invoice_email" @change="updateProp({ invoice_email: $event })"
-                              :label="$t('general.invoice_email')" field="invoice_email" :errors="errors"
+                              :label="$t('client-form:general.invoice_email')" field="invoice_email" :errors="errors"
                               class="col-sm-7"/>
                 </div>
-
                 <ClientFields class="row" :client="client"/>
-            </b-tab>
+            </div>
 
-            <b-tab :title="$t('tabs.invoicing')" class="col-12">
+            <div v-show="activeTab === 'invoicing'" class="row">
                 <div class="row">
                     <AppInput :value="client.currency" @change="updateProp({ currency: $event })"
-                              :label="$t('invoicing.currency')" field="currency" :errors="errors" class="col-sm-4"/>
+                              :label="$t('client-form:invoicing.currency')" field="currency" :errors="errors" class="col-sm-4"/>
                     <AppInput :value="client.rate" @change="updateProp({ rate: $event })"
-                              :label="$t('invoicing.rate')" field="rate" :errors="errors" class="col-sm-4"/>
+                              :label="$t('client-form:invoicing.rate')" field="rate" :errors="errors" class="col-sm-4"/>
                     <AppCheckbox :value="client.has_tax" @input="updateProp({ has_tax: $event })"
-                                 :label="$t('invoicing.has_tax')" field="has_tax" :errors="errors" class="col-sm-4"/>
+                                 :label="$t('client-form:invoicing.has_tax')" field="has_tax" :errors="errors" class="col-sm-4"/>
                     <AppSelect :value="client.bank_account"
                                track-by="id"
-                               :label="$t('invoicing.bank_account')"
+                               :label="$t('client-form:invoicing.bank_account')"
                                label-field="bank_name"
                                :options="bankAccounts || []"
                                @input="bankAccountChanged"
                                class="col-12"/>
                 </div>
-            </b-tab>
+            </div>
 
-            <b-tab :title="$t('tabs.address')" class="col-12">
+            <div v-show="activeTab === 'address'" class="row">
                 <div class="row">
                     <AppInput :value="client.company_address" @change="updateProp({ company_address: $event })"
-                              :label="$t('address.company_address')" field="company_address" :errors="errors"
+                              :label="$t('client-form:address.company_address')" field="company_address" :errors="errors"
                               class="col-12"/>
                     <AppInput :value="client.company_postal_code"
                               @change="updateProp({ company_postal_code: $event })"
-                              :label="$t('address.company_postal_code')" field="company_postal_code" :errors="errors"
+                              :label="$t('client-form:address.company_postal_code')" field="company_postal_code" :errors="errors"
                               class="col-sm-5"/>
                     <AppInput :value="client.company_city" @change="updateProp({ company_city: $event })"
-                              :label="$t('address.company_city')" field="company_city" :errors="errors"
+                              :label="$t('client-form:address.company_city')" field="company_city" :errors="errors"
                               class="col-sm-7"/>
                     <AppInput :value="client.company_county" @change="updateProp({ company_county: $event })"
-                              :label="$t('address.company_county')" field="company_county" :errors="errors"
+                              :label="$t('client-form:address.company_county')" field="company_county" :errors="errors"
                               class="col-sm-6"/>
                     <AppInput :value="client.company_country" @change="updateProp({ company_country: $event })"
-                              :label="$t('address.company_country')" field="company_country" :errors="errors"
+                              :label="$t('client-form:address.company_country')" field="company_country" :errors="errors"
                               class="col-sm-6"/>
                 </div>
-            </b-tab>
+            </div>
+        </div>
 
-        </b-tabs>
-
-        <div v-if="!client">{{ $t('loading') }}</div>
+        <div v-if="!client">{{ $t('client-form:loading') }}</div>
     </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
-import {
-  BTab, BTabs, BDropdownItemButton, BDropdown,
-} from 'bootstrap-vue';
+import { useClientsStore } from '@/store/clients';
+import { useBankAccountsStore } from '@/store/bank-accounts';
 import NotificationService from '@/services/notification.service';
-import AppInput from '@/components/form/AppInput';
-import AppSelect from '@/components/form/AppSelect';
+import AppInput from '@/components/form/AppInput.vue';
+import AppSelect from '@/components/form/AppSelect.vue';
 import Errors from '@/utils/errors';
-import AppCheckbox from '@/components/form/AppCheckbox';
-import ClientFields from '@/components/clients/ClientFields';
+import AppCheckbox from '@/components/form/AppCheckbox.vue';
+import ClientFields from '@/components/clients/ClientFields.vue';
 
 export default {
-  i18nOptions: { namespaces: 'client-form' },
   components: {
     ClientFields,
     AppCheckbox,
     AppInput,
     AppSelect,
-    BTab,
-    BTabs,
-    BDropdown,
-    BDropdownItemButton,
   },
+  emits: ['done'],
   data() {
     return {
       errors: new Errors(),
       loading: false,
+      activeTab: 'general',
     };
   },
   computed: {
-    ...mapGetters({
-      client: 'clients/client',
-      bankAccounts: 'bankAccounts/all',
-    }),
+    client() {
+      return useClientsStore().client;
+    },
+    bankAccounts() {
+      return useBankAccountsStore().all;
+    },
     isNew() {
-      return this.client && this.client.$isNew;
+      return this.client && this.client._isNew;
     },
   },
   mounted() {
@@ -124,23 +147,21 @@ export default {
   },
   methods: {
     getBankAccounts() {
-      this.$store.dispatch('bankAccounts/getBankAccounts');
+      useBankAccountsStore().getBankAccounts();
     },
     updateProp(props) {
+      const clientsStore = useClientsStore();
       if (this.isNew) {
-        return this.$store.dispatch('clients/clientProps', {
-          props,
-          clientId: this.client.id,
-        });
+        return clientsStore.updateClientProps(this.client.id, props);
       }
       this.errors.clear();
 
-      this.$store.dispatch('clients/updateClient', {
+      clientsStore.updateClient({
         props,
         clientId: this.client.id,
       })
         .then(() => {
-          NotificationService.success(this.$t('notification_updated'));
+          NotificationService.success(this.$t('client-form:notification_updated'));
         })
         .catch(err => this.errors.set(err.errors));
     },
@@ -154,7 +175,7 @@ export default {
       this.loading = true;
       this.errors.clear();
 
-      return this.$store.dispatch('clients/createNewClient', this.client)
+      return useClientsStore().createNewClient(this.client)
         .then((client) => {
           this.$router.push({
             query: {
@@ -169,18 +190,12 @@ export default {
         });
     },
     async deleteClient() {
-      const confirmed = await this.$bvModal.msgBoxConfirm(`${this.$t('delete_modal.title')} ${this.client.company_name}?`, {
-        okTitle: this.$t('delete_modal.ok_title'),
-        okVariant: 'danger',
-        cancelTitle: this.$t('delete_modal.cancel_title'),
-        cancelVariant: 'btn-link',
-        contentClass: 'bg-base dp--24',
-      });
+      const confirmed = confirm(`${this.$t('client-form:delete_modal.title')} ${this.client.company_name}?`);
       if (confirmed) {
         this.$emit('done');
-        await this.$store.dispatch('clients/deleteClient', this.client.id);
+        await useClientsStore().deleteClient(this.client.id);
         try {
-          NotificationService.success(this.$t('notification_deleted'));
+          NotificationService.success(this.$t('client-form:notification_deleted'));
         } catch (err) {
           NotificationService.error(err.message);
         }

@@ -1,6 +1,6 @@
 <template>
     <div class="invalid-feedback" v-if="errors.has(field)">
-        <template v-for="error in errors.get(field)">
+        <template v-for="(error, idx) in errors.get(field)" :key="idx">
             {{ error }} <br>
         </template>
     </div>
@@ -8,6 +8,9 @@
 
 <script>
 export default {
-  props: ['errors', 'field'],
+  props: {
+    errors: { required: true },
+    field: { required: true },
+  },
 };
 </script>

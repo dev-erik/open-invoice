@@ -71,9 +71,8 @@ export function validateField(input, field, label) {
 }
 
 export function removeVuexORMFlags(obj) {
-  delete obj.$id;
-  delete obj.$isNew;
-  delete obj.$isDirty;
+  delete obj._isNew;
+  delete obj._isDirty;
 }
 
 export function generateInvoiceNumber(invoices) {

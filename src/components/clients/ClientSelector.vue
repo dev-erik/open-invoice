@@ -2,59 +2,55 @@
     <div class="search-popover__container">
         <div class="editable__item"
              :class="btnClasses"
-             ref="button"
+             ref="buttonEl"
              :tabindex="tabindex"
              @click="toggleOpen">
-            <span v-if="!value" class="d-print-none">{{ $t('client') }}</span>
+            <span v-if="!value" class="d-print-none">{{ $t('client-selector:client') }}</span>
             <span v-else>{{ value }}</span>
         </div>
         <div class="search-popover__overlay" v-if="isOpen" @click="toggleOpen"></div>
-        <VueAutosuggest
-                class="search-popover__select"
-                v-show="isOpen"
-                ref="suggest"
-                :input-props="{placeholder: $t('suggest_placeholder'), class: 'form-control'}"
-                :suggestions="suggestions"
+        <div class="search-popover__select" v-show="isOpen">
+            <input
+                ref="inputEl"
+                type="text"
+                class="form-control"
+                :placeholder="$t('client-selector:suggest_placeholder')"
                 :value="query"
-                :get-suggestion-value="getSuggestionValue"
-                :should-render-suggestions="shouldRenderSuggestions"
                 @input="onInput"
-                @change="onChange"
-                @selected="onSelected"
                 @keydown.esc="toggleOpen"
                 @keydown.tab="toggleOpen"
                 @keydown.down="onKeyDown"
                 @keydown.ctrl.enter="createNewClient"
-        >
-            <template slot-scope="{ suggestion }">
-                <span>{{ suggestion.item.company_name }}</span>
-            </template>
-            <template slot="after-suggestions">
-                <button class="btn btn-link mt-2"
-                        ref="createNewButton"
-                        @click="createNewClient"
-                        @keydown.up="returnToSuggestions">
-                    <i class="material-icons material-icons-round md-18">add</i>
-                    {{ $t('create') }} {{this.query ? `"${this.query}"` : $t('new')}}
-                    <code class="ml-2 badge badge-secondary">ctrl + enter</code>
-                </button>
-            </template>
-        </VueAutosuggest>
+            />
+            <ul v-if="filteredClients.length" class="list-group mt-1">
+                <li v-for="client in filteredClients"
+                    :key="client.id"
+                    class="list-group-item list-group-item-action pointer"
+                    @click="onSelected(client)">
+                    {{ client.company_name }}
+                </li>
+            </ul>
+            <button class="btn btn-link mt-2"
+                    ref="createNewButton"
+                    @click="createNewClient"
+                    @keydown.up="returnToSuggestions">
+                <i class="material-icons material-icons-round md-18">add</i>
+                {{ $t('client-selector:create') }} {{ query ? `"${query}"` : $t('client-selector:new') }}
+                <code class="ms-2 badge bg-secondary">ctrl + enter</code>
+            </button>
+        </div>
     </div>
 </template>
 
 <script>
-import { VueAutosuggest } from 'vue-autosuggest';
+import { useClientsStore } from '@/store/clients';
 
 export default {
-  i18nOptions: { namespaces: 'client-selector' },
-  components: {
-    VueAutosuggest,
-  },
   props: {
-    value: {},
-    btnClass: {},
+    value: { default: null },
+    btnClass: { default: null },
   },
+  emits: ['selected', 'update:value'],
   data() {
     return {
       isOpen: false,
@@ -63,25 +59,15 @@ export default {
     };
   },
   computed: {
-    suggestions() {
-      return [{
-        data: [
-          /* { company_name: 'No client', id: null }, */
-          ...this.$store.getters['clients/all'] || [],
-        ]
-          .filter(client => !this.query || client.company_name.toLowerCase()
-            .indexOf(String(this.query)
-              .toLowerCase()) !== -1),
-      }];
-    },
-    input() {
-      return this.$refs.suggest.$el.querySelector('input');
-    },
-    button() {
-      return this.$refs.button;
+    filteredClients() {
+      const clientsStore = useClientsStore();
+      const all = clientsStore.all || [];
+      if (!this.query) return all;
+      const q = this.query.toLowerCase();
+      return all.filter(c => c.company_name && c.company_name.toLowerCase().includes(q));
     },
     btnClasses() {
-      return !this.value ? `text-muted ${this.btnClass}` : this.btnClass;
+      return !this.value ? `text-muted ${this.btnClass || ''}` : (this.btnClass || '');
     },
   },
   methods: {
@@ -96,54 +82,45 @@ export default {
       this.isOpen = true;
       setTimeout(() => {
         this.tabindex = -1;
-        this.input.click();
-        this.input.focus();
+        if (this.$refs.inputEl) {
+          this.$refs.inputEl.click();
+          this.$refs.inputEl.focus();
+        }
       });
     },
     close() {
       this.isOpen = false;
       setTimeout(() => {
         this.tabindex = 0;
-        // this.button.focus();
       });
       this.query = '';
     },
-    getSuggestionValue(/* suggestion */) {
-      // return suggestion.item.name;
-      return null;
+    onInput(event) {
+      this.query = event.target.value;
     },
-    onInput(query) {
-      this.query = query;
-      this.$emit('input', query);
-    },
-    onChange(event) {
-      this.$emit('change', event.target.value);
-    },
-    onSelected(suggestion) {
-      if (suggestion) {
-        this.$emit('selected', suggestion.item);
-        this.close();
-      }
+    onSelected(client) {
+      this.$emit('selected', client);
+      this.close();
     },
     async createNewClient() {
+      const clientsStore = useClientsStore();
       if (this.query.length) {
-        const client = await this.$store.dispatch('clients/createNewClient', { company_name: this.query });
+        const client = await clientsStore.createNewClient({ company_name: this.query });
         this.$emit('selected', client);
       } else {
-        this.$store.dispatch('clients/openNewClientModal');
+        clientsStore.openNewClientModal();
       }
       this.close();
     },
-    shouldRenderSuggestions() {
-      return this.isOpen;
-    },
     onKeyDown() {
-      if (this.$refs.suggest.totalResults === 0) {
+      if (this.filteredClients.length === 0 && this.$refs.createNewButton) {
         this.$refs.createNewButton.focus();
       }
     },
     returnToSuggestions() {
-      this.input.focus();
+      if (this.$refs.inputEl) {
+        this.$refs.inputEl.focus();
+      }
     },
   },
 };

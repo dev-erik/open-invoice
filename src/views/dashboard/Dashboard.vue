@@ -19,19 +19,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import ClientModal from '@/components/clients/ClientModal';
-import BankAccountModal from '@/components/bank-accounts/BankAccountModal';
-import { VBTooltip } from 'bootstrap-vue';
-import TeamModal from '@/components/team/TeamModal';
-import TheFooter from '@/components/TheFooter';
-import CustomizationsModal from '@/components/invoices/CustomizationsModal';
-import ImportModal from '../../components/ImportModal';
+import { useTeamsStore } from '@/store/teams';
+import ClientModal from '@/components/clients/ClientModal.vue';
+import BankAccountModal from '@/components/bank-accounts/BankAccountModal.vue';
+import TeamModal from '@/components/team/TeamModal.vue';
+import TheFooter from '@/components/TheFooter.vue';
+import CustomizationsModal from '@/components/invoices/CustomizationsModal.vue';
+import ImportModal from '@/components/ImportModal.vue';
 
 export default {
-  directives: {
-    'b-tooltip': VBTooltip,
-  },
   components: {
     TheFooter,
     TeamModal,
@@ -40,10 +36,14 @@ export default {
     ClientModal,
     CustomizationsModal,
   },
+  setup() {
+    const teamsStore = useTeamsStore();
+    return { teamsStore };
+  },
   computed: {
-    ...mapGetters({
-      team: 'teams/team',
-    }),
+    team() {
+      return this.teamsStore.team;
+    },
   },
 };
 </script>

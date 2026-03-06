@@ -1,73 +1,149 @@
+import { defineStore } from 'pinia';
 import InvoiceService from '@/services/invoice.service';
-import Invoice from '@/store/models/invoice';
-import { generateInvoiceNumber, pick } from '@/utils/helpers';
+import { generateInvoiceNumber, pick, uuidv4 } from '@/utils/helpers';
 import dayjs from 'dayjs';
 import Errors from '@/utils/errors';
+import { useClientsStore } from '@/store/clients';
+import { useTeamsStore } from '@/store/teams';
+import { useInvoiceClientFieldsStore } from '@/store/invoice-client-fields';
+import { useInvoiceTeamFieldsStore } from '@/store/invoice-team-fields';
 
-function getInvoice(invoiceId) {
-  return Invoice.query()
-    .with(['client', 'client_fields', 'team_fields', 'rows.taxes'])
-    .with('rows', query => query.orderBy('order', 'asc'))
-    .find(invoiceId);
+function computeInvoiceTotals(invoice) {
+  if (!invoice) return invoice;
+  const rows = invoice.rows || [];
+
+  const subTotal = rows.reduce((sum, row) => (row.quantity * row.price) + sum, 0);
+
+  const taxesMap = {};
+  rows.forEach(row => {
+    (row.taxes || []).forEach(tax => {
+      if (!Object.prototype.hasOwnProperty.call(taxesMap, tax.label)) {
+        taxesMap[tax.label] = { total: 0, label: tax.label, rate: tax.value };
+      }
+      taxesMap[tax.label].total += (row.quantity * row.price) * tax.value / 100;
+    });
+  });
+
+  const taxTotal = Object.values(taxesMap).reduce((sum, tax) => tax.total + sum, 0);
+
+  return {
+    ...invoice,
+    subTotal,
+    taxTotal,
+    total: subTotal + taxTotal,
+    taxes: taxesMap,
+    rows: rows.slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+  };
 }
 
-export default {
-  namespaced: true,
-  state: {
-    errors: new Errors(),
+function resolveInvoice(invoice, clientsItems) {
+  if (!invoice) return null;
+  const client = invoice.client_id
+    ? clientsItems.find(c => c.id === invoice.client_id) || null
+    : null;
+  return computeInvoiceTotals({ ...invoice, client });
+}
+
+export const useInvoicesStore = defineStore('invoices', {
+  state: () => ({
+    items: [],
     invoiceId: null,
     isCustomizationsModalOpen: false,
-  },
-  mutations: {
-    invoiceId(state, invoiceId) {
-      state.invoiceId = invoiceId;
+    errors: new Errors(),
+  }),
+  getters: {
+    invoice(state) {
+      const raw = state.items.find(i => i.id === state.invoiceId) || null;
+      if (!raw) return null;
+      const clientsStore = useClientsStore();
+      return resolveInvoice(raw, clientsStore.items);
     },
-    isCustomizationsModalOpen(state, isCustomizationsModalOpen) {
-      state.isCustomizationsModalOpen = isCustomizationsModalOpen;
-    },
-    setErrors(state, errors) {
-      state.errors.set(errors);
-    },
-    clearErrors(state) {
-      state.errors.clear();
+    all(state) {
+      const clientsStore = useClientsStore();
+      return state.items
+        .filter(i => !i._isNew)
+        .map(i => resolveInvoice(i, clientsStore.items))
+        .sort((a, b) => {
+          const dateCompare = (b.issued_at || '').localeCompare(a.issued_at || '');
+          if (dateCompare !== 0) return dateCompare;
+          return (b.number || '').localeCompare(a.number || '');
+        });
     },
   },
   actions: {
-    init({ dispatch }) {
-      dispatch('getInvoices');
+    async init() {
+      return this.getInvoices();
     },
     terminate() {
-      return Invoice.deleteAll();
+      this.items = [];
     },
     async getInvoices() {
       const invoices = await InvoiceService.getInvoices();
-      await Invoice.create({ data: invoices });
+      this.items = invoices || [];
       return invoices;
     },
-    async getInvoice({ commit }, invoiceId) {
+    async getInvoice(invoiceId) {
       const invoice = await InvoiceService.getInvoice(invoiceId);
-      await Invoice.insert({ data: invoice });
-      commit('invoiceId', invoiceId);
+      const index = this.items.findIndex(i => i.id === invoice.id);
+      if (index !== -1) {
+        this.items[index] = { ...this.items[index], ...invoice };
+      } else {
+        this.items.push(invoice);
+      }
+      this.invoiceId = invoiceId;
       return invoice;
     },
-    async createNewInvoice({ dispatch }) {
-      const invoice = await Invoice.createNew();
-      await InvoiceService.createInvoice(invoice);
-      await dispatch('prefillInvoice', {
-        invoiceId: invoice.id,
-      });
-      await dispatch('prefillTeam', {
-        invoiceId: invoice.id,
-      });
+    async createNewInvoice() {
+      const invoice = {
+        id: uuidv4(),
+        number: '',
+        status: 'draft',
+        issued_at: '',
+        is_compact: false,
+        due_at: '',
+        late_fee: '',
+        currency: '',
+        from_name: '',
+        from_address: '',
+        from_postal_code: '',
+        from_city: '',
+        from_country: '',
+        from_county: '',
+        from_website: '',
+        from_email: '',
+        from_phone: '',
+        bank_name: '',
+        bank_account_no: '',
+        client_name: '',
+        client_address: '',
+        client_postal_code: '',
+        client_country: '',
+        client_county: '',
+        client_city: '',
+        client_email: '',
+        client_id: null,
+        rows: [],
+        notes: '',
+        updated_at: '',
+        created_at: '',
+        client_fields: [],
+        team_fields: [],
+        _isNew: true,
+      };
+
+      this.items.push(invoice);
+      await InvoiceService.createInvoice({ ...invoice });
+      await this.prefillInvoice({ invoiceId: invoice.id });
+      await this.prefillTeam({ invoiceId: invoice.id });
       return invoice.id;
     },
-    invoiceProps(store, payload) {
-      return Invoice.update({
-        where: payload.invoiceId,
-        data: payload.props,
-      });
+    updateInvoiceProps(invoiceId, props) {
+      const index = this.items.findIndex(i => i.id === invoiceId);
+      if (index !== -1) {
+        this.items[index] = { ...this.items[index], ...props };
+      }
     },
-    async updateClient({ dispatch }, payload) {
+    async _updateClient(payload) {
       const clientProps = pick(payload.props, {
         bank_account_id: 'bank_account_id',
         client_name: 'company_name',
@@ -79,16 +155,17 @@ export default {
         client_email: 'invoice_email',
         currency: 'currency',
       });
-      const invoice = getInvoice(payload.invoiceId);
 
-      if (Object.keys(clientProps).length > 0 && invoice.client_id) {
-        dispatch('clients/updateClient', {
+      const invoice = this.items.find(i => i.id === payload.invoiceId);
+      if (Object.keys(clientProps).length > 0 && invoice && invoice.client_id) {
+        const clientsStore = useClientsStore();
+        clientsStore.updateClient({
           props: clientProps,
           clientId: invoice.client_id,
-        }, { root: true });
+        });
       }
     },
-    async updateTeam({ dispatch }, payload) {
+    async _updateTeam(payload) {
       const teamProps = pick(payload.props, {
         late_fee: 'invoice_late_fee',
         from_name: 'company_name',
@@ -101,59 +178,80 @@ export default {
         from_email: 'contact_email',
         from_phone: 'contact_phone',
       });
-      const invoice = getInvoice(payload.invoiceId);
+
+      const invoice = this.items.find(i => i.id === payload.invoiceId);
 
       if ('due_at' in payload.props || 'issued_at' in payload.props) {
-        teamProps.invoice_due_days = dayjs(invoice.due_at)
-          .diff(invoice.issued_at, 'days');
+        if (invoice) {
+          teamProps.invoice_due_days = dayjs(invoice.due_at)
+            .diff(invoice.issued_at, 'days');
+        }
       }
 
       if (Object.keys(teamProps).length > 0) {
-        dispatch('teams/updateTeam', teamProps, { root: true });
+        const teamsStore = useTeamsStore();
+        teamsStore.updateTeam(teamProps);
       }
     },
-    async updateInvoice({ dispatch, commit }, payload) {
+    async updateInvoice(payload) {
       if (payload.props) {
-        await dispatch('invoiceProps', payload);
-        await dispatch('updateClient', payload);
-        await dispatch('updateTeam', payload);
+        this.updateInvoiceProps(payload.invoiceId, payload.props);
+        await this._updateClient(payload);
+        await this._updateTeam(payload);
       }
 
-      commit('clearErrors');
-      return InvoiceService.updateInvoice(getInvoice(payload.invoiceId))
-        .catch(err => commit('setErrors', err.errors));
-    },
-    async deleteInvoice(store, invoice) {
-      const res = await InvoiceService.deleteInvoice(invoice.id);
-      await Invoice.delete(invoice.id);
-      return res;
-    },
-    async bookInvoice({ getters, commit, dispatch }) {
-      commit('clearErrors');
+      this.errors.clear();
+      const invoice = this.items.find(i => i.id === payload.invoiceId);
+      if (!invoice) return;
+
+      const clientsStore = useClientsStore();
+      const resolved = resolveInvoice(invoice, clientsStore.items);
 
       try {
-        await InvoiceService.bookInvoice(getters.invoice);
-        return dispatch('getInvoice', getters.invoice.id);
+        return await InvoiceService.updateInvoice(resolved);
       } catch (err) {
-        commit('setErrors', err.errors);
+        this.errors.set(err.errors);
       }
     },
-    prefillClient({ dispatch, rootGetters }, payload) {
-      const client = payload.client;
-      dispatch('invoiceClientFields/removeInvoiceClientFields', payload.invoiceId, { root: true });
+    async deleteInvoice(invoice) {
+      const res = await InvoiceService.deleteInvoice(invoice.id);
+      this.items = this.items.filter(i => i.id !== invoice.id);
+      return res;
+    },
+    async bookInvoice() {
+      this.errors.clear();
 
-      client.fields.forEach((field) => {
-        dispatch('invoiceClientFields/addInvoiceClientField', {
+      try {
+        const clientsStore = useClientsStore();
+        const raw = this.items.find(i => i.id === this.invoiceId);
+        const resolved = resolveInvoice(raw, clientsStore.items);
+        await InvoiceService.bookInvoice(resolved);
+        return this.getInvoice(this.invoiceId);
+      } catch (err) {
+        this.errors.set(err.errors);
+      }
+    },
+    prefillClient(payload) {
+      const client = payload.client;
+
+      const invoiceClientFieldsStore = useInvoiceClientFieldsStore();
+      invoiceClientFieldsStore.removeInvoiceClientFields(payload.invoiceId);
+
+      (client.fields || []).forEach(field => {
+        invoiceClientFieldsStore.addInvoiceClientField({
           invoiceId: payload.invoiceId,
           props: {
             label: field.label,
             value: field.value,
             client_field_id: field.id,
           },
-        }, { root: true });
+        });
       });
 
-      return dispatch('updateInvoice', {
+      const teamsStore = useTeamsStore();
+      const team = teamsStore.team;
+
+      return this.updateInvoice({
         invoiceId: payload.invoiceId,
         props: {
           client_id: client.id,
@@ -164,44 +262,49 @@ export default {
           client_county: client.company_county,
           client_country: client.company_country,
           client_email: client.invoice_email,
-          currency: client.currency || rootGetters['teams/team'].currency || 'USD',
+          currency: client.currency || (team && team.currency) || 'USD',
           bank_name: client.bank_account ? client.bank_account.bank_name : null,
           bank_account_no: client.bank_account ? client.bank_account.account_no : null,
         },
       });
     },
-    prefillInvoice({ dispatch, getters, rootGetters }, payload) {
-      const team = rootGetters['teams/team'];
+    prefillInvoice(payload) {
+      const teamsStore = useTeamsStore();
+      const team = teamsStore.team;
 
       const props = {
-        issued_at: dayjs()
-          .format('YYYY-MM-DD'),
+        issued_at: dayjs().format('YYYY-MM-DD'),
         due_at: dayjs()
-          .add(team.invoice_due_days || 14, 'days')
+          .add((team && team.invoice_due_days) || 14, 'days')
           .format('YYYY-MM-DD'),
-        number: generateInvoiceNumber(getters.all),
-        late_fee: team.invoice_late_fee || 0.5,
-        currency: team.currency || 'USD',
+        number: generateInvoiceNumber(this.all),
+        late_fee: (team && team.invoice_late_fee) || 0.5,
+        currency: (team && team.currency) || 'USD',
       };
 
-      return dispatch('updateInvoice', {
+      return this.updateInvoice({
         invoiceId: payload.invoiceId,
         props,
       });
     },
-    prefillTeam({ dispatch, rootGetters }, payload) {
-      const team = rootGetters['teams/team'];
-      dispatch('invoiceTeamFields/removeInvoiceTeamFields', payload.invoiceId, { root: true });
+    prefillTeam(payload) {
+      const teamsStore = useTeamsStore();
+      const invoiceTeamFieldsStore = useInvoiceTeamFieldsStore();
+      const team = teamsStore.team;
 
-      team.fields.forEach((field) => {
-        dispatch('invoiceTeamFields/addInvoiceTeamField', {
+      if (!team) return;
+
+      invoiceTeamFieldsStore.removeInvoiceTeamFields(payload.invoiceId);
+
+      (team.fields || []).forEach(field => {
+        invoiceTeamFieldsStore.addInvoiceTeamField({
           invoiceId: payload.invoiceId,
           props: {
             label: field.label,
             value: field.value,
             team_field_id: field.id,
           },
-        }, { root: true });
+        });
       });
 
       const props = {
@@ -216,24 +319,10 @@ export default {
         from_phone: team.contact_phone,
       };
 
-      return dispatch('updateInvoice', {
+      return this.updateInvoice({
         invoiceId: payload.invoiceId,
         props,
       });
     },
   },
-  getters: {
-    invoice(state) {
-      return getInvoice(state.invoiceId);
-    },
-    all() {
-      return Invoice.query()
-        .where('$isNew', false)
-        .with(['client', 'rows.taxes'])
-        .with('rows', query => query.orderBy('order', 'asc')) // TODO: do we need this?
-        .orderBy('issued_at', 'desc')
-        .orderBy('number', 'desc')
-        .get();
-    },
-  },
-};
+});

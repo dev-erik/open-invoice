@@ -1,36 +1,56 @@
-import InvoiceTeamField from '@/store/models/invoice-team-field';
+import { defineStore } from 'pinia';
+import { uuidv4 } from '@/utils/helpers';
+import { useInvoicesStore } from '@/store/invoices';
 
-export default {
-  namespaced: true,
-  state: {},
-  mutations: {},
+export const useInvoiceTeamFieldsStore = defineStore('invoiceTeamFields', {
   actions: {
     init() {},
     terminate() {},
-    invoiceTeamFieldProps(store, payload) {
-      return InvoiceTeamField.update({
-        where: payload.fieldId,
-        data: payload.props,
-      });
+    updateInvoiceTeamFieldProps(fieldId, props) {
+      const invoicesStore = useInvoicesStore();
+      for (const invoice of invoicesStore.items) {
+        if (!invoice.team_fields) continue;
+        const index = invoice.team_fields.findIndex(f => f.id === fieldId);
+        if (index !== -1) {
+          invoice.team_fields[index] = { ...invoice.team_fields[index], ...props };
+          return invoice.team_fields[index];
+        }
+      }
+      return null;
     },
-    async updateInvoiceTeamField({ dispatch }, payload) {
-      await dispatch('invoiceTeamFieldProps', payload);
-      return dispatch('invoices/updateInvoice', {
-        invoiceId: payload.invoiceId,
-      }, { root: true });
+    async updateInvoiceTeamField(payload) {
+      this.updateInvoiceTeamFieldProps(payload.fieldId, payload.props);
+      const invoicesStore = useInvoicesStore();
+      return invoicesStore.updateInvoice({ invoiceId: payload.invoiceId });
     },
-    async addInvoiceTeamField(store, payload) {
-      const field = await InvoiceTeamField.createNew();
-      await field.$update({
-        ...payload.props,
+    addInvoiceTeamField(payload) {
+      const invoicesStore = useInvoicesStore();
+      const invoice = invoicesStore.items.find(i => i.id === payload.invoiceId);
+      if (!invoice) return;
+      if (!invoice.team_fields) invoice.team_fields = [];
+      invoice.team_fields.push({
+        id: uuidv4(),
         invoice_id: payload.invoiceId,
+        ...payload.props,
       });
     },
-    async removeInvoiceTeamFields(store, invoiceId) {
-      return InvoiceTeamField.delete(field => field.invoice_id === invoiceId);
+    removeInvoiceTeamFields(invoiceId) {
+      const invoicesStore = useInvoicesStore();
+      const invoice = invoicesStore.items.find(i => i.id === invoiceId);
+      if (invoice) {
+        invoice.team_fields = [];
+      }
     },
-    removeInvoiceTeamField(store, fieldId) {
-      return InvoiceTeamField.delete(fieldId);
+    removeInvoiceTeamField(fieldId) {
+      const invoicesStore = useInvoicesStore();
+      for (const invoice of invoicesStore.items) {
+        if (!invoice.team_fields) continue;
+        const index = invoice.team_fields.findIndex(f => f.id === fieldId);
+        if (index !== -1) {
+          invoice.team_fields.splice(index, 1);
+          return;
+        }
+      }
     },
   },
-};
+});

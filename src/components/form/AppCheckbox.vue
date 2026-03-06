@@ -6,8 +6,8 @@
                    :class="{
                      'is-invalid': errors && errors.has(field)
                  }"
-                   :checked="value"
-                   @input="$emit('input', $event.target.checked)">
+                   :checked="modelValue"
+                   @input="$emit('update:modelValue', $event.target.checked)">
             <label class="form-check-label" :for="field">
                 {{ label }}
                 <slot/>
@@ -18,12 +18,18 @@
 </template>
 
 <script>
-import AppError from '@/components/form/AppError';
+import AppError from '@/components/form/AppError.vue';
 
 export default {
   components: {
     AppError,
   },
-  props: ['errors', 'label', 'value', 'field'],
+  props: {
+    errors: { default: null },
+    label: { default: '' },
+    modelValue: { default: false },
+    field: { default: '' },
+  },
+  emits: ['update:modelValue'],
 };
 </script>

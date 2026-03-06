@@ -1,28 +1,30 @@
 <template>
     <thead>
         <tr>
-            <th>{{ $t('item') }}</th>
-            <th>{{ $t('quantity') }}</th>
-            <th>{{ $t('unit') }}</th>
-            <th>{{ $t('price') }}</th>
+            <th>{{ $t('invoice-rows-header:item') }}</th>
+            <th>{{ $t('invoice-rows-header:quantity') }}</th>
+            <th>{{ $t('invoice-rows-header:unit') }}</th>
+            <th>{{ $t('invoice-rows-header:price') }}</th>
             <th v-for="tax in taxes" :key="tax.id">
                 {{ tax.label }} %
             </th>
-            <th class="text-right">{{ $t('sum') }}</th>
+            <th class="text-right">{{ $t('invoice-rows-header:sum') }}</th>
         </tr>
     </thead>
 </template>
 
 <script>
-
-import { mapGetters } from 'vuex';
+import { useInvoiceRowsStore } from '@/store/invoice-rows';
 
 export default {
-  i18nOptions: { namespaces: 'invoice-rows-header' },
+  setup() {
+    const invoiceRowsStore = useInvoiceRowsStore();
+    return { invoiceRowsStore };
+  },
   computed: {
-    ...mapGetters({
-      taxes: 'invoiceRows/taxes',
-    }),
+    taxes() {
+      return this.invoiceRowsStore.taxes;
+    },
   },
 };
 </script>

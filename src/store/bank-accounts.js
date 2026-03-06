@@ -1,67 +1,76 @@
+import { defineStore } from 'pinia';
 import BankAccountService from '@/services/bank-account.service';
-import BankAccount from '@/store/models/bank-account';
+import { uuidv4 } from '@/utils/helpers';
 
-export default {
-  namespaced: true,
-  state: {
+export const useBankAccountsStore = defineStore('bankAccounts', {
+  state: () => ({
+    items: [],
     bankAccountId: null,
     isModalOpen: null,
-  },
-  mutations: {
-    bankAccountId(state, bankAccountId) {
-      state.bankAccountId = bankAccountId;
+  }),
+  getters: {
+    bankAccount(state) {
+      return state.items.find(a => a.id === state.bankAccountId) || null;
     },
-    isModalOpen(state, isOpen) {
-      state.isModalOpen = isOpen;
+    all(state) {
+      return state.items.filter(a => !a._isNew);
     },
   },
   actions: {
-    init({ dispatch }) {
-      return dispatch('getBankAccounts');
+    async init() {
+      return this.getBankAccounts();
     },
     terminate() {
-      return BankAccount.deleteAll();
+      this.items = [];
     },
     async getBankAccounts() {
       const accounts = await BankAccountService.getBankAccounts();
-      await BankAccount.create({ data: accounts });
+      this.items = accounts || [];
       return accounts;
     },
-    async getBankAccount({ commit }, bankAccountId) {
+    async getBankAccount(bankAccountId) {
       const bankAccount = await BankAccountService.getBankAccount(bankAccountId);
-      commit('bankAccountId', bankAccount.id);
-      return BankAccount.insert({ data: bankAccount });
+      this.bankAccountId = bankAccount.id;
+      const index = this.items.findIndex(a => a.id === bankAccount.id);
+      if (index !== -1) {
+        this.items[index] = { ...this.items[index], ...bankAccount };
+      } else {
+        this.items.push(bankAccount);
+      }
+      return bankAccount;
     },
-    async createNewBankAccount(store, bankAccount) {
+    async createNewBankAccount(bankAccount) {
       const res = await BankAccountService.createBankAccount(bankAccount);
-      await BankAccount.insert({ data: res });
-      return BankAccount.find(res.id);
+      const index = this.items.findIndex(a => a.id === res.id);
+      if (index !== -1) {
+        this.items[index] = { ...this.items[index], ...res, _isNew: false };
+      } else {
+        this.items.push(res);
+      }
+      return this.items.find(a => a.id === res.id);
     },
-    bankAccountProps({ state }, props) {
-      return BankAccount.update({
-        where: state.bankAccountId,
-        data: props,
-      });
+    updateBankAccountProps(props) {
+      const index = this.items.findIndex(a => a.id === this.bankAccountId);
+      if (index !== -1) {
+        this.items[index] = { ...this.items[index], ...props };
+      }
     },
-    async updateBankAccount({ getters, dispatch }, props) {
-      await dispatch('bankAccountProps', props);
-      return BankAccountService.updateBankAccount(getters.bankAccount);
+    async updateBankAccount(props) {
+      this.updateBankAccountProps(props);
+      return BankAccountService.updateBankAccount(this.bankAccount);
     },
-    async openNewBankAccountModal({ commit }) {
-      const bankAccount = await BankAccount.createNew();
-      commit('bankAccountId', bankAccount.id);
-      commit('isModalOpen', true);
+    openNewBankAccountModal() {
+      const bankAccount = {
+        id: uuidv4(),
+        bank_name: '',
+        account_no: '',
+        updated_at: '',
+        created_at: '',
+        _isNew: true,
+      };
+      this.items.push(bankAccount);
+      this.bankAccountId = bankAccount.id;
+      this.isModalOpen = true;
     },
   },
-  getters: {
-    bankAccount(state) {
-      return BankAccount.query()
-        .find(state.bankAccountId);
-    },
-    all() {
-      return BankAccount.query()
-        .where('$isNew', false)
-        .get();
-    },
-  },
-};
+});

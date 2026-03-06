@@ -1,23 +1,27 @@
-import VueProgressBar from 'vue-progressbar';
-import progressbarConfig from '@/config/progressbar.config';
-import '@/config/local-storage.config';
-import { ModalPlugin } from 'bootstrap-vue';
-import Vue from 'vue';
+import { createApp } from 'vue';
 import App from '@/App.vue';
 import router from '@/router';
-import store from '@/store/store';
-import VueNotifications from 'vue-notification';
-import i18n from './config/i18n.config';
+import { pinia } from '@/store/store';
+import Notifications from '@kyvg/vue3-notification';
+import I18NextVue from 'i18next-vue';
+import { i18next, initialized } from '@/config/i18n.config';
+import { useLanguageStore } from '@/store/language';
+import '@/config/local-storage.config';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
-Vue.use(ModalPlugin);
-Vue.use(VueNotifications);
-Vue.use(VueProgressBar, progressbarConfig);
+NProgress.configure({ showSpinner: false });
 
-const app = new Vue({
-  router,
-  store,
-  i18n,
-  render: h => h(App),
-}).$mount('#app');
+const app = createApp(App);
 
-export default app;
+app.use(pinia);
+app.use(router);
+app.use(Notifications);
+app.use(I18NextVue, { i18next });
+
+initialized.then(() => {
+  const languageStore = useLanguageStore();
+  languageStore.initLanguage(i18next.language);
+});
+
+app.mount('#app');

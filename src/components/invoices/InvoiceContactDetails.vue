@@ -3,27 +3,26 @@
         <AppEditable :value="invoice.from_website"
                      :errors="errors"
                      field="from_website"
-                     :placeholder="$t('add_website')"
+                     :placeholder="$t('invoice-contact-details:add_website')"
                      class="break-line"
                      @change="updateProp({ from_website: $event })"/>
         <AppEditable :value="invoice.from_email"
                      :errors="errors"
                      field="from_email"
-                     :placeholder="$t('add_email')"
+                     :placeholder="$t('invoice-contact-details:add_email')"
                      class="break-line"
                      @change="updateProp({ from_email: $event })"/>
         <AppEditable :value="invoice.from_phone"
                      :errors="errors"
                      field="from_phone"
-                     :placeholder="$t('add_phone')"
+                     :placeholder="$t('invoice-contact-details:add_phone')"
                      @change="updateProp({ from_phone: $event })"/>
     </div>
 </template>
 <script>
-import AppEditable from '../form/AppEditable';
+import AppEditable from '@/components/form/AppEditable.vue';
 
 export default {
-  i18nOptions: { namespaces: 'invoice-contact-details' },
   props: ['invoice', 'errors'],
   components: {
     AppEditable,

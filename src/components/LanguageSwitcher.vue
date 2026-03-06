@@ -1,36 +1,38 @@
 <template>
-    <b-dropdown v-if="selectedLang" variant="link" size="sm" right no-caret custom-class="text-secondary">
-        <template slot="button-content">
-            <span class="text-secondary">
-                <span class="text-uppercase">{{ selectedLang.code }}</span>
-                <i class="material-icons md-18">expand_more</i>
-            </span>
-        </template>
-        <template v-for="lang in languages" >
-            <b-dropdown-item-button @click="langChanged(lang)" :key="lang.code">{{ lang.name }}</b-dropdown-item-button>
-        </template>
-    </b-dropdown>
+    <div v-if="selectedLang" class="dropdown d-inline-block">
+        <button class="btn btn-sm btn-link text-secondary dropdown-toggle"
+                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="text-uppercase">{{ selectedLang.code }}</span>
+            <i class="material-icons md-18">expand_more</i>
+        </button>
+        <ul class="dropdown-menu">
+            <li v-for="lang in languages" :key="lang.code">
+                <button class="dropdown-item" @click="langChanged(lang)">{{ lang.name }}</button>
+            </li>
+        </ul>
+    </div>
 </template>
 <script>
-import { mapState } from 'vuex';
-import { BDropdown, BDropdownItemButton } from 'bootstrap-vue';
+import { useLanguageStore } from '@/store/language';
+import i18next from 'i18next';
 
 export default {
-  name: 'language-switcher',
-  i18nOptions: { namespaces: 'language-switcher' },
-  components: {
-    BDropdown,
-    BDropdownItemButton,
-  },
+  name: 'LanguageSwitcher',
   computed: {
-    ...mapState({
-      selectedLang: state => state.language.lang,
-      languages: state => state.language.all,
-    }),
+    selectedLang() {
+      return useLanguageStore().lang;
+    },
+    languages() {
+      return useLanguageStore().all;
+    },
   },
   methods: {
     langChanged(lang) {
-      this.$store.dispatch('language/changeLanguage', lang);
+      useLanguageStore().changeLanguage(lang, {
+        i18next,
+        router: this.$router,
+        route: this.$route,
+      });
     },
   },
 };

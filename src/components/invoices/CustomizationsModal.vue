@@ -1,57 +1,65 @@
 <template>
-    <BModal v-model="isOpen"
-            centered
-            hide-footer
-            :title="$t('title')"
-            size="lg"
-            scrollable
-            content-class="bg-base dp--24 text-center">
-        <AppTextarea :value="team.custom_css"
-                     @change="updateProp({ custom_css: $event })"
-                     :label="$t('textarea_label')"
-                     field="custom_css"
-                     :errors="errors"
-                     input-classes="min-vh-50 text-monospace"
-                     class="text-left"/>
-    </BModal>
+    <div v-if="isOpen" class="modal d-block" tabindex="-1" @click.self="close">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content bg-base dp--24 text-center">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ $t('customizations-modal:title') }}</h5>
+                    <button type="button" class="btn-close" @click="close"></button>
+                </div>
+                <div class="modal-body">
+                    <AppTextarea :value="team ? team.custom_css : ''"
+                                 @change="updateProp({ custom_css: $event })"
+                                 :label="$t('customizations-modal:textarea_label')"
+                                 field="custom_css"
+                                 :errors="errors"
+                                 input-classes="min-vh-50 text-monospace"
+                                 class="text-left"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-if="isOpen" class="modal-backdrop fade show"></div>
 </template>
 
 <script>
-import { BModal } from 'bootstrap-vue';
-import AppTextarea from '@/components/form/AppTextarea';
+import { useInvoicesStore } from '@/store/invoices';
+import { useTeamsStore } from '@/store/teams';
+import AppTextarea from '@/components/form/AppTextarea.vue';
 import Errors from '@/utils/errors';
 import NotificationService from '@/services/notification.service';
-import { mapGetters } from 'vuex';
 
 export default {
-  i18nOptions: {
-    namespaces: 'customizations-modal',
-  },
   data() {
     return {
       errors: new Errors(),
     };
   },
   components: {
-    BModal,
     AppTextarea,
+  },
+  setup() {
+    const invoicesStore = useInvoicesStore();
+    const teamsStore = useTeamsStore();
+    return { invoicesStore, teamsStore };
   },
   computed: {
     isOpen: {
       get() {
-        return this.$store.state.invoices.isCustomizationsModalOpen;
+        return this.invoicesStore.isCustomizationsModalOpen;
       },
       set(val) {
-        this.$store.commit('invoices/isCustomizationsModalOpen', val);
+        this.invoicesStore.isCustomizationsModalOpen = val;
       },
     },
-    ...mapGetters({
-      team: 'teams/team',
-    }),
+    team() {
+      return this.teamsStore.team;
+    },
   },
   watch: {
     team() {
-      this.updateStyleEl(this.team.custom_css);
+      if (this.team) {
+        this.updateStyleEl(this.team.custom_css);
+      }
     },
   },
   created() {
@@ -80,9 +88,9 @@ export default {
     },
     updateProp(props) {
       this.errors.clear();
-      this.$store.dispatch('teams/updateTeam', props)
+      this.teamsStore.updateTeam(props)
         .then(() => {
-          NotificationService.success(this.$t('updated'));
+          NotificationService.success(this.$t('customizations-modal:updated'));
           this.updateStyleEl(props.custom_css);
         })
         .catch(err => this.errors.set(err.errors));

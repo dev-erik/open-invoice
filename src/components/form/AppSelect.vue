@@ -3,27 +3,25 @@
         <label :for="field" v-if="label">{{ label }}</label>
         <Multiselect :id="field"
                      :options="options"
-                     :track-by="trackBy"
+                     :valueProp="trackBy || 'value'"
                      :disabled="disabled"
-                     :label="labelField"
-                     :allow-empty="allowEmpty"
-                     :custom-label="customLabel"
-                     :deselect-label="deselectLabel"
-                     :select-label="selectLabel"
-                     :selected-label="selectedLabel"
-                     :preserve-search="true"
-                     @input="$emit('input', $event)"
+                     :label="labelField || 'label'"
+                     :canDeselect="allowEmpty"
+                     :canClear="allowEmpty"
+                     :searchable="true"
+                     :modelValue="modelValue"
+                     @update:modelValue="onUpdate"
                      @search-change="$emit('search-change', $event)"
-                     :value="value"
                      :placeholder="placeholder"
                      :loading="loading"
                      :class="{
                          'is-invalid': errors && errors.has(field)
                      }"
-                     :multiple="multiple"
+                     :mode="multiple ? 'tags' : 'single'"
+                     :object="true"
         >
-            <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData">
-                <slot :name="name" v-bind="slotData"/>
+            <template v-for="(_, name) in $slots" #[name]="slotData">
+                <slot :name="name" v-bind="slotData || {}"/>
             </template>
         </Multiselect>
         <AppError v-if="errors" :errors="errors" :field="field"/>
@@ -31,9 +29,8 @@
 </template>
 
 <script>
-import Multiselect from 'vue-multiselect';
-import 'vue-multiselect/dist/vue-multiselect.min.css';
-import AppError from '@/components/form/AppError';
+import Multiselect from '@vueform/multiselect';
+import AppError from '@/components/form/AppError.vue';
 
 export default {
   components: {
@@ -43,7 +40,7 @@ export default {
   props: {
     errors: {},
     label: {},
-    value: {},
+    modelValue: {},
     field: {},
     options: {},
     multiple: {},
@@ -57,6 +54,12 @@ export default {
     selectLabel: { default: '' },
     selectedLabel: { default: '' },
     disabled: { default: false },
+  },
+  emits: ['update:modelValue', 'search-change'],
+  methods: {
+    onUpdate(value) {
+      this.$emit('update:modelValue', value);
+    },
   },
 };
 </script>

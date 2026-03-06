@@ -1,61 +1,52 @@
 <template>
-    <BModal v-model="isOpen"
-            centered
-            hide-footer
-            hide-header
-            content-class="bg-base dp--24">
-        <TeamForm @done="close"/>
-    </BModal>
+    <teleport to="body">
+        <div v-if="isOpen" class="modal d-block" tabindex="-1" @click.self="close">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-base dp--24">
+                    <TeamForm @done="close"/>
+                </div>
+            </div>
+        </div>
+        <div v-if="isOpen" class="modal-backdrop fade show"></div>
+    </teleport>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { BModal } from 'bootstrap-vue';
-import TeamForm from '@/components/team/TeamForm';
+import { useTeamsStore } from '@/store/teams';
+import { useInvoicesStore } from '@/store/invoices';
+import TeamForm from '@/components/team/TeamForm.vue';
 
 export default {
   components: {
     TeamForm,
-    BModal,
   },
   computed: {
-    isOpen: {
-      get() {
-        return this.$store.state.teams.isModalOpen;
-      },
-      set(val) {
-        this.$store.commit('teams/isModalOpen', val);
-      },
+    isOpen() {
+      return useTeamsStore().isModalOpen;
     },
-    ...mapGetters({
-      team: 'teams/team',
-      invoice: 'invoices/invoice',
-    }),
+    team() {
+      return useTeamsStore().team;
+    },
+    invoice() {
+      return useInvoicesStore().invoice;
+    },
   },
   mounted() {
     this.getTeam();
   },
   methods: {
     getTeam() {
-      this.$store.dispatch('teams/getTeam');
+      useTeamsStore().getTeam();
     },
     async close() {
       await this.promptUpdateInvoice();
-      this.isOpen = false;
+      useTeamsStore().isModalOpen = false;
     },
     async promptUpdateInvoice() {
       if (this.$route.name === 'invoice') {
-        /* const confirmed = await this.$bvModal.msgBoxConfirm('Update team details on invoice?', {
-          okTitle: 'Update',
-          cancelTitle: 'Dismiss',
-          cancelVariant: 'btn-link',
-          contentClass: 'bg-base dp--24',
-        });
-        if (confirmed) { */
-        this.$store.dispatch('invoices/prefillTeam', {
+        useInvoicesStore().prefillTeam({
           invoiceId: this.invoice.id,
         });
-        /* } */
       }
     },
   },

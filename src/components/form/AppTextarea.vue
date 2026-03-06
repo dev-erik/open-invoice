@@ -10,12 +10,12 @@
                       :class="[
                        errors && errors.has(field) ? 'is-invalid' : '',
                        size ? 'form-control-' + size : '',
-                       ...inputClasses,
+                       ...inputClassList,
                        ]"
                       :autocomplete="autocomplete"
                       :maxlength="max"
-                      :value="value"
-                      @input="$emit('input', $event.target.value)"
+                      :value="modelValue"
+                      @input="$emit('update:modelValue', $event.target.value)"
                       @change="$emit('change', $event.target.value)"
                       @keydown.self.enter.exact="$emit('submit', $event.target.value)"
                       :ref="field"
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import AppError from '@/components/form/AppError';
+import AppError from '@/components/form/AppError.vue';
 
 export default {
   components: {
@@ -37,7 +37,7 @@ export default {
   props: {
     errors: {},
     label: {},
-    value: {},
+    modelValue: {},
     field: {},
     type: {},
     max: {},
@@ -50,6 +50,14 @@ export default {
     containerClasses: {},
     autocomplete: {
       default: 'on',
+    },
+  },
+  emits: ['update:modelValue', 'change', 'submit'],
+  computed: {
+    inputClassList() {
+      if (Array.isArray(this.inputClasses)) return this.inputClasses;
+      if (this.inputClasses) return [this.inputClasses];
+      return [];
     },
   },
   methods: {

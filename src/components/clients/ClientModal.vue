@@ -1,40 +1,35 @@
 <template>
-    <BModal v-model="isOpen"
-            centered
-            hide-footer
-            hide-header
-            content-class="bg-base dp--24">
-        <ClientForm @done="close()"/>
-    </BModal>
+    <teleport to="body">
+        <div v-if="isOpen" class="modal d-block" tabindex="-1" @click.self="close">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-base dp--24">
+                    <ClientForm @done="close()"/>
+                </div>
+            </div>
+        </div>
+        <div v-if="isOpen" class="modal-backdrop fade show"></div>
+    </teleport>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { BModal } from 'bootstrap-vue';
-import ClientForm from '@/components/clients/ClientForm';
+import { useClientsStore } from '@/store/clients';
+import { useInvoicesStore } from '@/store/invoices';
+import ClientForm from '@/components/clients/ClientForm.vue';
 
 export default {
   components: {
     ClientForm,
-    BModal,
   },
   computed: {
-    isOpen: {
-      get() {
-        return this.$store.state.clients.isModalOpen;
-      },
-      set(val) {
-        if (!val) {
-          this.$router.push({ query: {} });
-          this.$store.dispatch('clients/getClients');
-        }
-        this.$store.commit('clients/isModalOpen', val);
-      },
+    isOpen() {
+      return useClientsStore().isModalOpen;
     },
-    ...mapGetters({
-      client: 'clients/client',
-      invoice: 'invoices/invoice',
-    }),
+    client() {
+      return useClientsStore().client;
+    },
+    invoice() {
+      return useInvoicesStore().invoice;
+    },
   },
   watch: {
     '$route.query.clientId'() {
@@ -46,35 +41,30 @@ export default {
   },
   methods: {
     getClient() {
+      const clientsStore = useClientsStore();
       const query = this.$route.query;
-      if (query.hasOwnProperty('clientId')) {
+      if (Object.prototype.hasOwnProperty.call(query, 'clientId')) {
         if ((this.client && this.client.id !== query.clientId) || !this.client) {
-          this.$store.dispatch('clients/getClient', query.clientId);
+          clientsStore.getClient(query.clientId);
         }
-
-        this.$store.commit('clients/isModalOpen', true);
+        clientsStore.isModalOpen = true;
       } else {
-        this.$store.commit('clients/isModalOpen', false);
+        clientsStore.isModalOpen = false;
       }
     },
     async close() {
       await this.promptUpdateInvoice();
-      this.isOpen = false;
+      const clientsStore = useClientsStore();
+      this.$router.push({ query: {} });
+      clientsStore.getClients();
+      clientsStore.isModalOpen = false;
     },
     async promptUpdateInvoice() {
-      if (this.$route.name === 'invoice' && this.invoice.client_id === this.client.id) {
-        /* const confirmed = await this.$bvModal.msgBoxConfirm('Update client details on invoice?', {
-          okTitle: 'Update',
-          cancelTitle: 'Dismiss',
-          cancelVariant: 'btn-link',
-          contentClass: 'bg-base dp--24',
-        });
-        if (confirmed) { */
-        this.$store.dispatch('invoices/prefillClient', {
+      if (this.$route.name === 'invoice' && this.invoice && this.client && this.invoice.client_id === this.client.id) {
+        useInvoicesStore().prefillClient({
           client: this.client,
           invoiceId: this.invoice.id,
         });
-        /* } */
       }
     },
   },

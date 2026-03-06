@@ -2,19 +2,22 @@
     <div>
         <div class="row">
             <div class="col-12 mb-4 pr-0 d-flex justify-content-between">
-                <h4 class="mb-0">{{ $t('title') }}</h4>
+                <h4 class="mb-0">{{ $t('invoices:title') }}</h4>
                 <div>
                     <button class="btn btn-sm btn-outline-dark"
                             :class="{ 'mr-3': !isStorageLocal }"
-                            @click="createNewInvoice">{{ $t('new_invoice') }}
+                            @click="createNewInvoice">{{ $t('invoices:new_invoice') }}
                     </button>
-                    <b-dropdown variant="link" size="sm" no-caret right v-if="isStorageLocal">
-                        <template slot="button-content">
+                    <div class="dropdown d-inline-block" v-if="isStorageLocal">
+                        <button class="btn btn-link btn-sm dropdown-toggle no-caret" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="material-icons">more_vert</i>
-                        </template>
-                        <b-dropdown-item @click="exportJson">{{ $t('export') }}</b-dropdown-item>
-                        <b-dropdown-item @click="openImportModal">{{ $t('import') }}</b-dropdown-item>
-                    </b-dropdown>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><button class="dropdown-item" @click="exportJson">{{ $t('invoices:export') }}</button></li>
+                            <li><button class="dropdown-item" @click="openImportModal">{{ $t('invoices:import') }}</button></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -27,37 +30,41 @@
 </template>
 
 <script>
-import { BDropdown, BDropdownItem } from 'bootstrap-vue';
-import { mapGetters } from 'vuex';
-import InvoicesList from '@/components/invoices/InvoicesList';
+import { useTeamsStore } from '@/store/teams';
+import { useInvoicesStore } from '@/store/invoices';
+import { useDataStore } from '@/store/data';
+import InvoicesList from '@/components/invoices/InvoicesList.vue';
 import config from '@/config/app.config';
 
 export default {
   name: 'invoices',
-  i18nOptions: { namespaces: 'invoices' },
   components: {
     InvoicesList,
-    BDropdown,
-    BDropdownItem,
+  },
+  setup() {
+    const teamsStore = useTeamsStore();
+    const invoicesStore = useInvoicesStore();
+    const dataStore = useDataStore();
+    return { teamsStore, invoicesStore, dataStore };
   },
   computed: {
-    ...mapGetters({
-      team: 'teams/team',
-    }),
+    team() {
+      return this.teamsStore.team;
+    },
     isStorageLocal() {
       return config.storageType === 'local';
     },
   },
   methods: {
     createNewInvoice() {
-      this.$store.dispatch('invoices/createNewInvoice')
+      this.invoicesStore.createNewInvoice()
         .then(id => this.$router.push({ name: 'invoice', params: { id } }));
     },
     exportJson() {
-      this.$store.dispatch('data/exportJson');
+      this.dataStore.exportJson();
     },
     openImportModal() {
-      this.$store.commit('data/isImportModalOpen', true);
+      this.dataStore.isImportModalOpen = true;
     },
   },
 };

@@ -2,7 +2,6 @@
     <div id="app"
          class="min-vh-100"
          :class="$route.name">
-        <vue-progress-bar/>
         <transition name="fade" mode="out-in">
             <router-view/>
         </transition>
@@ -11,6 +10,7 @@
 </template>
 
 <script>
+import { useThemesStore } from '@/store/themes';
 
 export default {
   name: 'app',
@@ -29,21 +29,21 @@ export default {
       window.addEventListener('load', this.jsLoaded, false);
     },
     initColorScheme() {
+      const themesStore = useThemesStore();
+
       // local storage is used to override OS theme settings
       if (localStorage.getItem('theme')) {
         if (localStorage.getItem('theme') === 'dark') {
-          this.$store.commit('themes/theme', 'dark');
+          themesStore.setTheme('dark');
           return document.documentElement.setAttribute('data-theme', 'dark');
         }
       } else if (!window.matchMedia) {
-        // matchMedia method not supported
         return false;
       } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        // OS theme setting detected as dark
-        this.$store.commit('themes/theme', 'dark');
+        themesStore.setTheme('dark');
         return document.documentElement.setAttribute('data-theme', 'dark');
       }
-      document.documentElement.setAttribute('data-theme', this.theme || 'light');
+      document.documentElement.setAttribute('data-theme', themesStore.theme || 'light');
     },
   },
 };
@@ -51,7 +51,11 @@ export default {
 
 <style lang="scss">
 @import './assets/scss/variables';
+
+$body-color: #000;
+$body-bg: #fff;
+
 @import 'bootstrap/scss/bootstrap';
-@import 'bootstrap-vue/dist/bootstrap-vue.min.css';
+@import 'nprogress/nprogress.css';
 @import './assets/scss/app';
 </style>

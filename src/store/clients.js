@@ -1,85 +1,146 @@
+import { defineStore } from 'pinia';
 import ClientService from '@/services/client.service';
-import Client from '@/store/models/client';
+import { uuidv4 } from '@/utils/helpers';
+import { useBankAccountsStore } from '@/store/bank-accounts';
+import { useClientFieldsStore } from '@/store/client-fields';
 
-function getClientById(clientId) {
-  return Client.query()
-    .with(['bank_account', 'fields'])
-    .find(clientId);
-}
-
-export default {
-  namespaced: true,
-  state: {
+export const useClientsStore = defineStore('clients', {
+  state: () => ({
+    items: [],
     clientId: null,
     isModalOpen: false,
-  },
-  mutations: {
-    clientId(state, clientId) {
-      state.clientId = clientId;
+  }),
+  getters: {
+    client(state) {
+      const c = state.items.find(c => c.id === state.clientId) || null;
+      if (!c) return null;
+      const bankAccountsStore = useBankAccountsStore();
+      return {
+        ...c,
+        bank_account: c.bank_account_id
+          ? bankAccountsStore.items.find(a => a.id === c.bank_account_id) || null
+          : null,
+      };
     },
-    isModalOpen(state, isOpen) {
-      state.isModalOpen = isOpen;
+    all(state) {
+      const bankAccountsStore = useBankAccountsStore();
+      return state.items
+        .filter(c => !c._isNew)
+        .map(c => ({
+          ...c,
+          bank_account: c.bank_account_id
+            ? bankAccountsStore.items.find(a => a.id === c.bank_account_id) || null
+            : null,
+        }));
     },
   },
   actions: {
-    init({ dispatch }) {
-      return dispatch('getClients');
+    async init() {
+      return this.getClients();
     },
     terminate() {
-      return Client.deleteAll();
+      this.items = [];
     },
     async getClients() {
       const clients = await ClientService.getClients();
-      await Client.create({ data: clients });
+      this.items = clients || [];
       return clients;
     },
-    async getClient({ commit }, clientId) {
+    async getClient(clientId) {
       const client = await ClientService.getClient(clientId);
-      commit('clientId', client.id);
-      Client.insert({ data: client });
-    },
-    async createNewClient({ dispatch }, client) {
-      if (!client.hasOwnProperty('id')) {
-        client = new Client(client);
+      this.clientId = client.id;
+      const index = this.items.findIndex(c => c.id === client.id);
+      if (index !== -1) {
+        this.items[index] = { ...this.items[index], ...client };
+      } else {
+        this.items.push(client);
       }
-      await dispatch('clientFields/addAllFields', client.id, { root: true });
+    },
+    async createNewClient(clientData) {
+      let client = clientData;
+      if (!client.id) {
+        client = {
+          id: uuidv4(),
+          company_name: '',
+          company_address: '',
+          company_postal_code: '',
+          company_country: '',
+          company_county: '',
+          company_city: '',
+          has_tax: true,
+          currency: null,
+          rate: null,
+          invoice_email: '',
+          bank_account_id: null,
+          fields: [],
+          updated_at: '',
+          created_at: '',
+          ...clientData,
+        };
+      }
+
+      const clientFieldsStore = useClientFieldsStore();
+      clientFieldsStore.addAllFields(client.id);
 
       const res = await ClientService.createClient(client);
-      await Client.insert({ data: res });
-      return getClientById(res.id);
-    },
-    clientProps(store, payload) {
-      return Client.update({
-        where: payload.clientId,
-        data: payload.props,
-      });
-    },
-    async updateClient({ dispatch }, payload) {
-      if (payload.props) {
-        await dispatch('clientProps', payload);
+      const index = this.items.findIndex(c => c.id === res.id);
+      if (index !== -1) {
+        this.items[index] = { ...this.items[index], ...res, _isNew: false };
+      } else {
+        this.items.push(res);
       }
-      return ClientService.updateClient(getClientById(payload.clientId));
+
+      const bankAccountsStore = useBankAccountsStore();
+      const saved = this.items.find(c => c.id === res.id);
+      return {
+        ...saved,
+        bank_account: saved.bank_account_id
+          ? bankAccountsStore.items.find(a => a.id === saved.bank_account_id) || null
+          : null,
+      };
     },
-    async openNewClientModal({ commit }) {
-      const client = await Client.createNew();
-      commit('clientId', client.id);
-      commit('isModalOpen', true);
+    updateClientProps(clientId, props) {
+      const index = this.items.findIndex(c => c.id === clientId);
+      if (index !== -1) {
+        this.items[index] = { ...this.items[index], ...props };
+      }
     },
-    async deleteClient(store, clientId) {
+    async updateClient(payload) {
+      if (payload.props) {
+        this.updateClientProps(payload.clientId, payload.props);
+      }
+      const client = this.items.find(c => c.id === payload.clientId);
+      if (client) {
+        return ClientService.updateClient(client);
+      }
+    },
+    openNewClientModal() {
+      const client = {
+        id: uuidv4(),
+        company_name: '',
+        company_address: '',
+        company_postal_code: '',
+        company_country: '',
+        company_county: '',
+        company_city: '',
+        has_tax: true,
+        currency: null,
+        rate: null,
+        invoice_email: '',
+        bank_account_id: null,
+        fields: [],
+        updated_at: '',
+        created_at: '',
+        _isNew: true,
+      };
+      this.items.push(client);
+      this.clientId = client.id;
+      this.isModalOpen = true;
+    },
+    async deleteClient(clientId) {
       const res = await ClientService.deleteClient(clientId);
-      await Client.delete(clientId);
+      this.items = this.items.filter(c => c.id !== clientId);
       return res;
     },
   },
-  getters: {
-    client(state) {
-      return getClientById(state.clientId);
-    },
-    all() {
-      return Client.query()
-        .where('$isNew', false)
-        .with(['bank_account', 'fields'])
-        .get();
-    },
-  },
-};
+});

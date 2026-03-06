@@ -9,25 +9,29 @@
     </tr>
 </template>
 <script>
-import { mapGetters } from 'vuex';
-import AppError from '@/components/form/AppError';
+import { useInvoiceRowsStore } from '@/store/invoice-rows';
+import AppError from '@/components/form/AppError.vue';
 
 export default {
   props: ['invoice', 'errors'],
   components: {
     AppError,
   },
+  setup() {
+    const invoiceRowsStore = useInvoiceRowsStore();
+    return { invoiceRowsStore };
+  },
   computed: {
-    ...mapGetters({
-      taxes: 'invoiceRows/taxes',
-    }),
+    taxes() {
+      return this.invoiceRowsStore.taxes;
+    },
     colspan() {
       return 5 + this.taxes.length;
     },
   },
   methods: {
     addRow() {
-      this.$store.dispatch('invoiceRows/addRow', this.invoice.id);
+      this.invoiceRowsStore.addRow(this.invoice.id);
     },
   },
 };

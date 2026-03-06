@@ -1,55 +1,75 @@
+import { defineStore } from 'pinia';
 import TeamService from '@/services/team.service';
-import Team from '@/store/models/team';
+import { useDataStore } from '@/store/data';
+import { useClientsStore } from '@/store/clients';
+import { useBankAccountsStore } from '@/store/bank-accounts';
+import { useInvoicesStore } from '@/store/invoices';
+import { useTaxesStore } from '@/store/taxes';
 
-export default {
-  namespaced: true,
-  state: {
+const DEFAULT_CUSTOM_CSS = `
+/* @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap');
+
+.invoice-box:after {
+    background: linear-gradient(to bottom, #1C7CE0, #150051);
+}
+
+.invoice-box {
+    font-family: 'Work Sans', sans-serif;
+} */
+`;
+
+export const useTeamsStore = defineStore('teams', {
+  state: () => ({
+    item: null,
     isModalOpen: false,
-  },
-  mutations: {
-    isModalOpen(state, isOpen) {
-      state.isModalOpen = isOpen;
+  }),
+  getters: {
+    team(state) {
+      return state.item;
     },
   },
   actions: {
-    async init({ dispatch }) {
-      await dispatch('data/migrate', null, { root: true });
+    async init() {
+      const dataStore = useDataStore();
+      const clientsStore = useClientsStore();
+      const bankAccountsStore = useBankAccountsStore();
+      const invoicesStore = useInvoicesStore();
+      const taxesStore = useTaxesStore();
 
-      await Promise.all([
-        dispatch('clients/terminate', null, { root: true }),
-        dispatch('bankAccounts/terminate', null, { root: true }),
-        dispatch('invoices/terminate', null, { root: true }),
-        dispatch('taxes/terminate', null, { root: true }),
-      ]);
+      await dataStore.migrate();
 
-      await dispatch('getTeam');
+      clientsStore.terminate();
+      bankAccountsStore.terminate();
+      invoicesStore.terminate();
+      taxesStore.terminate();
 
-      dispatch('clients/init', null, { root: true });
-      dispatch('bankAccounts/init', null, { root: true });
-      dispatch('invoices/init', null, { root: true });
-      dispatch('taxes/init', null, { root: true });
+      await this.getTeam();
+
+      clientsStore.init();
+      bankAccountsStore.init();
+      invoicesStore.init();
+      taxesStore.init();
     },
-    async terminate() {
-      return Team.deleteAll();
+    terminate() {
+      this.item = null;
     },
     async getTeam() {
       const team = await TeamService.getTeam();
-      await Team.create({ data: team });
+      this.item = team;
       return team;
     },
-    async teamProps({ getters }, props) {
-      return getters.team.$update(props);
-    },
-    async updateTeam({ getters, dispatch }, props) {
-      if (props) {
-        await dispatch('teamProps', props);
+    updateTeamProps(props) {
+      if (this.item && props) {
+        Object.assign(this.item, props);
       }
-      return TeamService.updateTeam(getters.team);
+    },
+    async updateTeam(props) {
+      if (props) {
+        this.updateTeamProps(props);
+      }
+      return TeamService.updateTeam(this.item);
     },
   },
-  getters: {
-    team() {
-      return Team.query().with(['fields']).first();
-    },
-  },
-};
+});
+
+export { DEFAULT_CUSTOM_CSS };

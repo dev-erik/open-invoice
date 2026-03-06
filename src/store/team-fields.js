@@ -1,31 +1,45 @@
-import TeamField from '@/store/models/team-field';
+import { defineStore } from 'pinia';
+import { uuidv4 } from '@/utils/helpers';
+import { useTeamsStore } from '@/store/teams';
 
-export default {
-  namespaced: true,
-  state: {},
-  mutations: {},
+export const useTeamFieldsStore = defineStore('teamFields', {
   actions: {
     init() {},
     terminate() {},
-    async teamFieldProps(store, payload) {
-      return TeamField.update({
-        where: payload.fieldId,
-        data: payload.props,
-      });
+    updateTeamFieldProps(fieldId, props) {
+      const teamsStore = useTeamsStore();
+      const team = teamsStore.item;
+      if (!team || !team.fields) return null;
+      const index = team.fields.findIndex(f => f.id === fieldId);
+      if (index !== -1) {
+        team.fields[index] = { ...team.fields[index], ...props };
+      }
+      return team.fields[index] || null;
     },
-    async updateTeamField({ dispatch }, payload) {
-      await dispatch('teamFieldProps', payload);
-      return dispatch('teams/updateTeam', null, { root: true });
+    async updateTeamField(payload) {
+      this.updateTeamFieldProps(payload.fieldId, payload.props);
+      const teamsStore = useTeamsStore();
+      return teamsStore.updateTeam(null);
     },
-    async addNewField(store, teamId) {
-      const field = await TeamField.createNew();
-      field.$update({
+    addNewField(teamId) {
+      const teamsStore = useTeamsStore();
+      const team = teamsStore.item;
+      if (!team) return;
+      if (!team.fields) team.fields = [];
+      team.fields.push({
+        id: uuidv4(),
         team_id: teamId,
+        label: '',
+        value: '',
       });
     },
-    async deleteTeamField({ dispatch }, fieldId) {
-      await TeamField.delete(fieldId);
-      return dispatch('teams/updateTeam', null, { root: true });
+    async deleteTeamField(fieldId) {
+      const teamsStore = useTeamsStore();
+      const team = teamsStore.item;
+      if (team && team.fields) {
+        team.fields = team.fields.filter(f => f.id !== fieldId);
+      }
+      return teamsStore.updateTeam(null);
     },
   },
-};
+});

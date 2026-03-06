@@ -5,14 +5,12 @@
 </template>
 
 <script>
-import InvoiceForm from '../components/invoices/InvoiceForm';
+import InvoiceForm from '@/components/invoices/InvoiceForm.vue';
 
 export default {
-  name: 'client',
+  name: 'invoice-print',
   components: {
     InvoiceForm,
   },
-  computed: {},
-  methods: {},
 };
 </script>

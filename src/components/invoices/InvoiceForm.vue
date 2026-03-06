@@ -17,7 +17,7 @@
                     <div class="row mt-3">
                         <AppEditable :value="invoice.notes"
                                      class="col-12"
-                                     :placeholder="$t('insert_note')"
+                                     :placeholder="$t('invoice-form:insert_note')"
                                      @change="updateProp({ notes: $event })"/>
                     </div>
                     <div class="row">
@@ -43,21 +43,20 @@
     </div>
 </template>
 <script>
-import { mapGetters, mapState } from 'vuex';
-import InvoiceRow from '@/components/invoices/InvoiceRow';
-import InvoiceClientDetails from '@/components/invoices/InvoiceClientDetails';
-import InvoiceCompanyDetails from '@/components/invoices/InvoiceCompanyDetails';
-import InvoiceBankDetails from '@/components/invoices/InvoiceBankDetails';
-import InvoiceContactDetails from '@/components/invoices/InvoiceContactDetails';
-import InvoiceHeader from '@/components/invoices/InvoiceHeader';
-import InvoiceTotals from '@/components/invoices/InvoiceTotals';
-import AppEditable from '@/components/form/AppEditable';
-import TeamLogo from '@/components/team/TeamLogo';
-import InvoiceRowsHeader from '@/components/invoices/InvoiceRowsHeader';
-import InvoiceAddRowBtn from '@/components/invoices/InvoiceAddRowBtn';
+import { useInvoicesStore } from '@/store/invoices';
+import InvoiceRow from '@/components/invoices/InvoiceRow.vue';
+import InvoiceClientDetails from '@/components/invoices/InvoiceClientDetails.vue';
+import InvoiceCompanyDetails from '@/components/invoices/InvoiceCompanyDetails.vue';
+import InvoiceBankDetails from '@/components/invoices/InvoiceBankDetails.vue';
+import InvoiceContactDetails from '@/components/invoices/InvoiceContactDetails.vue';
+import InvoiceHeader from '@/components/invoices/InvoiceHeader.vue';
+import InvoiceTotals from '@/components/invoices/InvoiceTotals.vue';
+import AppEditable from '@/components/form/AppEditable.vue';
+import TeamLogo from '@/components/team/TeamLogo.vue';
+import InvoiceRowsHeader from '@/components/invoices/InvoiceRowsHeader.vue';
+import InvoiceAddRowBtn from '@/components/invoices/InvoiceAddRowBtn.vue';
 
 export default {
-  i18nOptions: { namespaces: 'invoice-form' },
   components: {
     InvoiceAddRowBtn,
     TeamLogo,
@@ -71,13 +70,17 @@ export default {
     InvoiceClientDetails,
     AppEditable,
   },
+  setup() {
+    const invoicesStore = useInvoicesStore();
+    return { invoicesStore };
+  },
   computed: {
-    ...mapState({
-      errors: state => state.invoices.errors,
-    }),
-    ...mapGetters({
-      invoice: 'invoices/invoice',
-    }),
+    errors() {
+      return this.invoicesStore.errors;
+    },
+    invoice() {
+      return this.invoicesStore.invoice;
+    },
   },
   watch: {
     '$route.params.id'() {
@@ -89,10 +92,10 @@ export default {
   },
   methods: {
     getInvoice() {
-      this.$store.dispatch('invoices/getInvoice', this.$route.params.id);
+      this.invoicesStore.getInvoice(this.$route.params.id);
     },
     updateProp(props) {
-      this.$store.dispatch('invoices/updateInvoice', {
+      this.invoicesStore.updateInvoice({
         props,
         invoiceId: this.invoice.id,
       });

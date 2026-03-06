@@ -1,36 +1,56 @@
-import InvoiceClientField from '@/store/models/invoice-client-field';
+import { defineStore } from 'pinia';
+import { uuidv4 } from '@/utils/helpers';
+import { useInvoicesStore } from '@/store/invoices';
 
-export default {
-  namespaced: true,
-  state: {},
-  mutations: {},
+export const useInvoiceClientFieldsStore = defineStore('invoiceClientFields', {
   actions: {
     init() {},
     terminate() {},
-    invoiceClientFieldProps(store, payload) {
-      return InvoiceClientField.update({
-        where: payload.fieldId,
-        data: payload.props,
-      });
+    updateInvoiceClientFieldProps(fieldId, props) {
+      const invoicesStore = useInvoicesStore();
+      for (const invoice of invoicesStore.items) {
+        if (!invoice.client_fields) continue;
+        const index = invoice.client_fields.findIndex(f => f.id === fieldId);
+        if (index !== -1) {
+          invoice.client_fields[index] = { ...invoice.client_fields[index], ...props };
+          return invoice.client_fields[index];
+        }
+      }
+      return null;
     },
-    async updateInvoiceClientField({ dispatch }, payload) {
-      await dispatch('invoiceClientFieldProps', payload);
-      return dispatch('invoices/updateInvoice', {
-        invoiceId: payload.invoiceId,
-      }, { root: true });
+    async updateInvoiceClientField(payload) {
+      this.updateInvoiceClientFieldProps(payload.fieldId, payload.props);
+      const invoicesStore = useInvoicesStore();
+      return invoicesStore.updateInvoice({ invoiceId: payload.invoiceId });
     },
-    async removeInvoiceClientFields(store, invoiceId) {
-      return InvoiceClientField.delete(field => field.invoice_id === invoiceId);
+    removeInvoiceClientFields(invoiceId) {
+      const invoicesStore = useInvoicesStore();
+      const invoice = invoicesStore.items.find(i => i.id === invoiceId);
+      if (invoice) {
+        invoice.client_fields = [];
+      }
     },
-    async addInvoiceClientField(store, payload) {
-      const field = await InvoiceClientField.createNew();
-      await field.$update({
-        ...payload.props,
+    addInvoiceClientField(payload) {
+      const invoicesStore = useInvoicesStore();
+      const invoice = invoicesStore.items.find(i => i.id === payload.invoiceId);
+      if (!invoice) return;
+      if (!invoice.client_fields) invoice.client_fields = [];
+      invoice.client_fields.push({
+        id: uuidv4(),
         invoice_id: payload.invoiceId,
+        ...payload.props,
       });
     },
-    async removeInvoiceClientField(store, fieldId) {
-      await InvoiceClientField.delete(fieldId);
+    removeInvoiceClientField(fieldId) {
+      const invoicesStore = useInvoicesStore();
+      for (const invoice of invoicesStore.items) {
+        if (!invoice.client_fields) continue;
+        const index = invoice.client_fields.findIndex(f => f.id === fieldId);
+        if (index !== -1) {
+          invoice.client_fields.splice(index, 1);
+          return;
+        }
+      }
     },
   },
-};
+});

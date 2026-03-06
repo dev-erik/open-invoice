@@ -1,21 +1,21 @@
 <template>
     <div>
-        <div v-if="!bankAccounts">{{ $t('loading') }}</div>
+        <div v-if="!bankAccounts">{{ $t('bank-accounts-list:loading') }}</div>
         <div v-else-if="bankAccounts && bankAccounts.length > 0">
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <th>{{ $t('bank') }}</th>
-                    <th>{{ $t('bank_account_details') }}</th>
-                    <th class="text-right"></th>
+                    <th>{{ $t('bank-accounts-list:bank') }}</th>
+                    <th>{{ $t('bank-accounts-list:bank_account_details') }}</th>
+                    <th class="text-end"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="account in bankAccounts" :key="account.id"
-                    @click="onSelect(account)" :class="{pointer: $listeners.select }">
+                    @click="onSelect(account)" :class="{pointer: hasSelectListener }">
                     <td>{{ account.bank_name }}</td>
                     <td>{{ account.account_no }}</td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <i class="material-icons md-18 p-1 pointer"
                            @click.stop="openBankAccountModal(account)">
                             edit
@@ -24,42 +24,45 @@
                 </tr>
                 </tbody>
             </table>
-            <button class="btn btn-sm btn-link" @click="createNewAccount">{{ $t('add_bank_account') }}</button>
+            <button class="btn btn-sm btn-link" @click="createNewAccount">{{ $t('bank-accounts-list:add_bank_account') }}</button>
         </div>
         <EmptyState v-else>
             <template v-slot>
-                <button class="btn btn-sm btn-link" @click="createNewAccount">{{ $t('add_bank_account') }}</button>
+                <button class="btn btn-sm btn-link" @click="createNewAccount">{{ $t('bank-accounts-list:add_bank_account') }}</button>
             </template>
         </EmptyState>
     </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
-import { formatDate } from '@/filters/date.filter';
-import EmptyState from '@/components/EmptyState';
+import { useBankAccountsStore } from '@/store/bank-accounts';
+import EmptyState from '@/components/EmptyState.vue';
 
 export default {
-  i18nOptions: { namespaces: 'bank-accounts-list' },
   components: {
     EmptyState,
   },
-  filters: {
-    date: formatDate,
+  emits: ['select'],
+  props: {
+    hasSelectListener: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
-    ...mapGetters({
-      bankAccounts: 'bankAccounts/all',
-    }),
+    bankAccounts() {
+      return useBankAccountsStore().all;
+    },
   },
   mounted() {
-    this.$store.dispatch('bankAccounts/getBankAccounts');
+    useBankAccountsStore().getBankAccounts();
   },
   methods: {
     createNewAccount() {
-      this.$store.dispatch('bankAccounts/openNewBankAccountModal');
+      useBankAccountsStore().openNewBankAccountModal();
     },
     openBankAccountModal(bankAccount) {
-      this.$store.commit('bankAccounts/bankAccountId', bankAccount.id);
+      const store = useBankAccountsStore();
+      store.bankAccountId = bankAccount.id;
       this.$router.push({
         query: {
           bankAccountId: bankAccount.id,

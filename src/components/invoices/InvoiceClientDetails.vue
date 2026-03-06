@@ -6,10 +6,10 @@
         </div>
         <AppEditable :value="invoice.client_address"
                      suffix=", "
-                     :placeholder="$t('client_address')"
+                     :placeholder="$t('invoice-client-details:client_address')"
                      @change="updateProp({ client_address: $event })"/>
         <AppEditable :value="invoice.client_postal_code"
-                     :placeholder="$t('client_postal_code')"
+                     :placeholder="$t('invoice-client-details:client_postal_code')"
                      class="break-line"
                      @change="updateProp({ client_postal_code: $event })"/>
         <AppError :errors="errors" field="client_address"/>
@@ -17,14 +17,14 @@
 
         <AppEditable :value="invoice.client_city"
                      suffix=", "
-                     :placeholder="$t('client_city')"
+                     :placeholder="$t('invoice-client-details:client_city')"
                      @change="updateProp({ client_city: $event })"/>
         <AppEditable :value="invoice.client_county"
                      suffix=", "
-                     :placeholder="$t('client_county')"
+                     :placeholder="$t('invoice-client-details:client_county')"
                      @change="updateProp({ client_county: $event })"/>
         <AppEditable :value="invoice.client_country"
-                     :placeholder="$t('client_country')"
+                     :placeholder="$t('invoice-client-details:client_country')"
                      class="break-line"
                      @change="updateProp({ client_country: $event })"/>
         <AppError :errors="errors" field="client_city"/>
@@ -37,24 +37,28 @@
                      :errors="errors"
                      field="client_email"
                      class="break-line"
-                     :placeholder="$t('client_email')"
+                     :placeholder="$t('invoice-client-details:client_email')"
                      @change="updateProp({ client_email: $event })"/>
     </div>
 </template>
 <script>
-import AppError from '@/components/form/AppError';
-import AppEditable from '@/components/form/AppEditable';
-import ClientSelector from '@/components/clients/ClientSelector';
-import InvoiceClientFields from '@/components/invoices/InvoiceClientFields';
+import { useInvoicesStore } from '@/store/invoices';
+import AppError from '@/components/form/AppError.vue';
+import AppEditable from '@/components/form/AppEditable.vue';
+import ClientSelector from '@/components/clients/ClientSelector.vue';
+import InvoiceClientFields from '@/components/invoices/InvoiceClientFields.vue';
 
 export default {
-  i18nOptions: { namespaces: 'invoice-client-details' },
   props: ['invoice', 'errors'],
   components: {
     AppError,
     ClientSelector,
     AppEditable,
     InvoiceClientFields,
+  },
+  setup() {
+    const invoicesStore = useInvoicesStore();
+    return { invoicesStore };
   },
   methods: {
     editClient() {
@@ -64,7 +68,7 @@ export default {
       this.$emit('update', props);
     },
     clientSelected(client) {
-      this.$store.dispatch('invoices/prefillClient', {
+      this.invoicesStore.prefillClient({
         client,
         invoiceId: this.invoice.id,
       });

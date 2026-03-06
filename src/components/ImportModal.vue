@@ -1,32 +1,38 @@
 <template>
-    <BModal v-model="isOpen"
-            centered
-            hide-footer
-            :title="$t('title')"
-            size="md"
-            content-class="bg-base dp--24 text-center">
-        <p>
-            <AppFileInput @selected="onSelected" :button-text="$t('button_text')"/>
-            <AppError :errors="errors" field="file"/>
-        </p>
-        <p>
-            <small>{{ $t('warning') }}</small>
-        </p>
-    </BModal>
+    <teleport to="body">
+        <div v-if="isOpen" class="modal d-block" tabindex="-1" @click.self="close">
+            <div class="modal-dialog modal-dialog-centered modal-md">
+                <div class="modal-content bg-base dp--24 text-center">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ $t('import-modal:title') }}</h5>
+                        <button type="button" class="btn-close" @click="close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <AppFileInput @selected="onSelected" :button-text="$t('import-modal:button_text')"/>
+                            <AppError :errors="errors" field="file"/>
+                        </p>
+                        <p>
+                            <small>{{ $t('import-modal:warning') }}</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-if="isOpen" class="modal-backdrop fade show"></div>
+    </teleport>
 </template>
 
 <script>
-import { BModal } from 'bootstrap-vue';
-import AppFileInput from './form/AppFileInput';
+import { useDataStore } from '@/store/data';
+import AppFileInput from './form/AppFileInput.vue';
 import Errors from '../utils/errors';
-import AppError from './form/AppError';
+import AppError from './form/AppError.vue';
 
 export default {
-  i18nOptions: { namespaces: 'import-modal' },
   components: {
     AppError,
     AppFileInput,
-    BModal,
   },
   data() {
     return {
@@ -34,28 +40,22 @@ export default {
     };
   },
   computed: {
-    isOpen: {
-      get() {
-        return this.$store.state.data.isImportModalOpen;
-      },
-      set(val) {
-        this.$store.commit('data/isImportModalOpen', val);
-      },
+    isOpen() {
+      return useDataStore().isImportModalOpen;
     },
   },
   methods: {
     close() {
-      this.isOpen = false;
+      useDataStore().isImportModalOpen = false;
     },
     onSelected(payload) {
       try {
         const data = JSON.parse(payload.content);
-
-        this.$store.dispatch('data/importJson', data);
+        useDataStore().importJson(data);
         this.close();
       } catch (e) {
         return this.errors.set({
-          file: [this.$t('on-select-error')],
+          file: [this.$t('import-modal:on-select-error')],
         });
       }
     },

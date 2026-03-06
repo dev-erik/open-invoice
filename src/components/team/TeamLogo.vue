@@ -8,40 +8,46 @@
             <i class="material-icons material-icons-round md-36">file_upload</i>
         </button>
         <AppError :errors="errors" field="logo_url"/>
-        <BModal v-model="isModalOpen"
-                centered
-                :title="$t('modal_title')"
-                hide-footer
-                size="sm"
-                content-class="bg-base dp--24 text-center">
-            <AppFileInput accept="image/*" class="mb-4" @selected="logoSelected"
-                          :button-text="$t('button_text')" output-type="base64"/>
-            {{ $t('or') }}
-            <AppInput :value="team.logo_url"
-                      class="mt-4"
-                      @change="updateTeam({ logo_url: $event })"
-                      :label="$t('logo_url')"
-                      field="logo_url"
-                      :errors="errors"
-                      type="url"/>
-        </BModal>
+
+        <teleport to="body">
+            <div v-if="isModalOpen" class="modal d-block" tabindex="-1" @click.self="isModalOpen = false">
+                <div class="modal-dialog modal-dialog-centered modal-sm">
+                    <div class="modal-content bg-base dp--24 text-center">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ $t('team-logo:modal_title') }}</h5>
+                            <button type="button" class="btn-close" @click="isModalOpen = false"></button>
+                        </div>
+                        <div class="modal-body">
+                            <AppFileInput accept="image/*" class="mb-4" @selected="logoSelected"
+                                          :button-text="$t('team-logo:button_text')" output-type="base64"/>
+                            {{ $t('team-logo:or') }}
+                            <AppInput :value="team.logo_url"
+                                      class="mt-4"
+                                      @change="updateTeam({ logo_url: $event })"
+                                      :label="$t('team-logo:logo_url')"
+                                      field="logo_url"
+                                      :errors="errors"
+                                      type="url"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="isModalOpen" class="modal-backdrop fade show"></div>
+        </teleport>
     </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
-import AppError from '@/components/form/AppError';
-import { BModal } from 'bootstrap-vue';
-import AppInput from '@/components/form/AppInput';
-import AppFileInput from '@/components/form/AppFileInput';
+import { useTeamsStore } from '@/store/teams';
+import AppError from '@/components/form/AppError.vue';
+import AppInput from '@/components/form/AppInput.vue';
+import AppFileInput from '@/components/form/AppFileInput.vue';
 
 export default {
-  i18nOptions: { namespaces: 'team-logo' },
   props: ['errors'],
   components: {
     AppFileInput,
     AppError,
     AppInput,
-    BModal,
   },
   data() {
     return {
@@ -49,18 +55,18 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      team: 'teams/team',
-    }),
+    team() {
+      return useTeamsStore().team;
+    },
   },
   methods: {
     updateTeam(props) {
-      this.$store.dispatch('teams/updateTeam', props);
+      useTeamsStore().updateTeam(props);
     },
     logoSelected(payload) {
       this.errors.clear();
       if (payload.size / 1000 > 512) {
-        return this.errors.set({ logo_url: [this.$t('logo_url_err')] });
+        return this.errors.set({ logo_url: [this.$t('team-logo:logo_url_err')] });
       }
       this.updateTeam({ logo_url: payload.content });
     },

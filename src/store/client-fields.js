@@ -1,49 +1,81 @@
-import ClientField from '@/store/models/client-field';
+import { defineStore } from 'pinia';
+import { uuidv4 } from '@/utils/helpers';
+import { useClientsStore } from '@/store/clients';
 
-export default {
-  namespaced: true,
-  state: {},
-  mutations: {},
+export const useClientFieldsStore = defineStore('clientFields', {
   actions: {
     init() {},
     terminate() {},
-    async clientFieldProps(store, payload) {
-      return ClientField.update({
-        where: payload.fieldId,
-        data: payload.props,
-      });
+    updateClientFieldProps(fieldId, props) {
+      const clientsStore = useClientsStore();
+      for (const client of clientsStore.items) {
+        if (!client.fields) continue;
+        const index = client.fields.findIndex(f => f.id === fieldId);
+        if (index !== -1) {
+          client.fields[index] = { ...client.fields[index], ...props };
+          return client.fields[index];
+        }
+      }
+      return null;
     },
-    async updateClientField({ dispatch }, payload) {
-      const field = await dispatch('clientFieldProps', payload);
-      return dispatch('clients/updateClient', {
-        clientId: field.client_id,
-      }, { root: true });
+    async updateClientField(payload) {
+      const field = this.updateClientFieldProps(payload.fieldId, payload.props);
+      if (!field) return;
+      const clientsStore = useClientsStore();
+      return clientsStore.updateClient({ clientId: field.client_id });
     },
-    async addNewField(store, clientId) {
-      const field = await ClientField.createNew();
-      field.$update({
+    addNewField(clientId) {
+      const clientsStore = useClientsStore();
+      const client = clientsStore.items.find(c => c.id === clientId);
+      if (!client) return;
+      if (!client.fields) client.fields = [];
+      client.fields.push({
+        id: uuidv4(),
         client_id: clientId,
+        label: '',
+        value: '',
       });
     },
-    async addAllFields(store, clientId) {
-      // Get all distinct custom fields
-      const uniqueLabels = ClientField.all()
-        .map(field => field.label)
-        .filter((value, index, self) => self.indexOf(value) === index);
+    addAllFields(clientId) {
+      const clientsStore = useClientsStore();
+      const client = clientsStore.items.find(c => c.id === clientId);
+      if (!client) return;
+      if (!client.fields) client.fields = [];
 
-      await Promise.all(uniqueLabels.map(async (label) => {
-        const field = await ClientField.createNew();
-        await field.$update({
-          label,
+      const uniqueLabels = [];
+      for (const c of clientsStore.items) {
+        if (!c.fields) continue;
+        for (const f of c.fields) {
+          if (f.label && !uniqueLabels.includes(f.label)) {
+            uniqueLabels.push(f.label);
+          }
+        }
+      }
+
+      uniqueLabels.forEach(label => {
+        client.fields.push({
+          id: uuidv4(),
           client_id: clientId,
+          label,
+          value: '',
         });
-      }));
+      });
     },
-    async deleteClientField({ dispatch }, fieldId) {
-      const field = await ClientField.delete(fieldId);
-      return dispatch('clients/updateClient', {
-        clientId: field.client_id,
-      }, { root: true }); // TODO: pass clientId to make generic
+    async deleteClientField(fieldId) {
+      const clientsStore = useClientsStore();
+      let clientId = null;
+      for (const client of clientsStore.items) {
+        if (!client.fields) continue;
+        const index = client.fields.findIndex(f => f.id === fieldId);
+        if (index !== -1) {
+          clientId = client.id;
+          client.fields.splice(index, 1);
+          break;
+        }
+      }
+      if (clientId) {
+        return clientsStore.updateClient({ clientId });
+      }
     },
   },
-};
+});
