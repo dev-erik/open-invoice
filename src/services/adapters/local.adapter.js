@@ -1,5 +1,10 @@
 import storage from 'localforage';
 import { removeVuexORMFlags } from '@/utils/helpers';
+import { toRaw } from 'vue';
+
+function toPlain(obj) {
+  return JSON.parse(JSON.stringify(toRaw(obj)));
+}
 
 class LocalAdapter {
   async get(uri) {
@@ -23,12 +28,13 @@ class LocalAdapter {
   async post(uri, data) {
     const items = await this.get(uri);
 
-    removeVuexORMFlags(data);
-    items.push(data);
+    const plain = toPlain(data);
+    removeVuexORMFlags(plain);
+    items.push(plain);
 
     await storage.setItem(uri, items);
 
-    return data;
+    return plain;
   }
 
   async patch(uri, data) {
@@ -39,19 +45,20 @@ class LocalAdapter {
 
       const index = items.findIndex(it => it.id === parts[1]);
       if (index === -1) return null;
-      removeVuexORMFlags(data);
-      items[index] = data;
+      const plain = toPlain(data);
+      removeVuexORMFlags(plain);
+      items[index] = plain;
 
       await storage.setItem(parts[0], items);
 
-      return data;
+      return plain;
     }
 
     return null;
   }
 
   async put(uri, data) {
-    return storage.setItem(uri, data);
+    return storage.setItem(uri, toPlain(data));
   }
 
   async delete(uri) {

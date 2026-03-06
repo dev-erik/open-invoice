@@ -54,9 +54,9 @@
 
             <div v-show="activeTab === 'general'" class="row">
                 <div class="row">
-                    <AppInput :value="client.company_name" @change="updateProp({ company_name: $event })"
+                    <AppInput :modelValue="client.company_name" @change="updateProp({ company_name: $event })"
                               :label="$t('client-form:general.company_name')" field="company_name" :errors="errors" class="col-12"/>
-                    <AppInput :value="client.invoice_email" @change="updateProp({ invoice_email: $event })"
+                    <AppInput :modelValue="client.invoice_email" @change="updateProp({ invoice_email: $event })"
                               :label="$t('client-form:general.invoice_email')" field="invoice_email" :errors="errors"
                               class="col-sm-7"/>
                 </div>
@@ -65,11 +65,11 @@
 
             <div v-show="activeTab === 'invoicing'" class="row">
                 <div class="row">
-                    <AppInput :value="client.currency" @change="updateProp({ currency: $event })"
+                    <AppInput :modelValue="client.currency" @change="updateProp({ currency: $event })"
                               :label="$t('client-form:invoicing.currency')" field="currency" :errors="errors" class="col-sm-4"/>
-                    <AppInput :value="client.rate" @change="updateProp({ rate: $event })"
+                    <AppInput :modelValue="client.rate" @change="updateProp({ rate: $event })"
                               :label="$t('client-form:invoicing.rate')" field="rate" :errors="errors" class="col-sm-4"/>
-                    <AppCheckbox :value="client.has_tax" @input="updateProp({ has_tax: $event })"
+                    <AppCheckbox :modelValue="client.has_tax" @update:modelValue="updateProp({ has_tax: $event })"
                                  :label="$t('client-form:invoicing.has_tax')" field="has_tax" :errors="errors" class="col-sm-4"/>
                     <AppSelect :modelValue="client.bank_account"
                                track-by="id"
@@ -83,20 +83,20 @@
 
             <div v-show="activeTab === 'address'" class="row">
                 <div class="row">
-                    <AppInput :value="client.company_address" @change="updateProp({ company_address: $event })"
+                    <AppInput :modelValue="client.company_address" @change="updateProp({ company_address: $event })"
                               :label="$t('client-form:address.company_address')" field="company_address" :errors="errors"
                               class="col-12"/>
-                    <AppInput :value="client.company_postal_code"
+                    <AppInput :modelValue="client.company_postal_code"
                               @change="updateProp({ company_postal_code: $event })"
                               :label="$t('client-form:address.company_postal_code')" field="company_postal_code" :errors="errors"
                               class="col-sm-5"/>
-                    <AppInput :value="client.company_city" @change="updateProp({ company_city: $event })"
+                    <AppInput :modelValue="client.company_city" @change="updateProp({ company_city: $event })"
                               :label="$t('client-form:address.company_city')" field="company_city" :errors="errors"
                               class="col-sm-7"/>
-                    <AppInput :value="client.company_county" @change="updateProp({ company_county: $event })"
+                    <AppInput :modelValue="client.company_county" @change="updateProp({ company_county: $event })"
                               :label="$t('client-form:address.company_county')" field="company_county" :errors="errors"
                               class="col-sm-6"/>
-                    <AppInput :value="client.company_country" @change="updateProp({ company_country: $event })"
+                    <AppInput :modelValue="client.company_country" @change="updateProp({ company_country: $event })"
                               :label="$t('client-form:address.company_country')" field="company_country" :errors="errors"
                               class="col-sm-6"/>
                 </div>

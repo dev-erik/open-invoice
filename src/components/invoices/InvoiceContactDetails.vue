@@ -1,18 +1,18 @@
 <template>
     <div>
-        <AppEditable :value="invoice.from_website"
+        <AppEditable :modelValue="invoice.from_website"
                      :errors="errors"
                      field="from_website"
                      :placeholder="$t('invoice-contact-details:add_website')"
                      class="break-line"
                      @change="updateProp({ from_website: $event })"/>
-        <AppEditable :value="invoice.from_email"
+        <AppEditable :modelValue="invoice.from_email"
                      :errors="errors"
                      field="from_email"
                      :placeholder="$t('invoice-contact-details:add_email')"
                      class="break-line"
                      @change="updateProp({ from_email: $event })"/>
-        <AppEditable :value="invoice.from_phone"
+        <AppEditable :modelValue="invoice.from_phone"
                      :errors="errors"
                      field="from_phone"
                      :placeholder="$t('invoice-contact-details:add_phone')"

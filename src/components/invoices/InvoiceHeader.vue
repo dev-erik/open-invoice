@@ -2,7 +2,7 @@
     <div>
         <h3>
             {{ $t('invoice-header:invoice_title') }}
-            <AppEditable :value="invoice.number"
+            <AppEditable :modelValue="invoice.number"
                          :errors="errors"
                          field="number"
                          :placeholder="$t('invoice-header:invoice_number')"
@@ -18,7 +18,7 @@
                         <button type="button" class="btn-close" @click="showIssuedAtModal = false"></button>
                     </div>
                     <div class="modal-body">
-                        <AppDatePicker :value="invoice.issued_at"
+                        <AppDatePicker :modelValue="invoice.issued_at"
                                        @change="updateProp({ issued_at: $event })"
                                        :errors="errors"
                                        :inline="true"
@@ -39,7 +39,7 @@
                         <button type="button" class="btn-close" @click="showDueAtModal = false"></button>
                     </div>
                     <div class="modal-body">
-                        <AppDatePicker :value="invoice.due_at"
+                        <AppDatePicker :modelValue="invoice.due_at"
                                        @change="updateProp({ due_at: $event })"
                                        :errors="errors"
                                        :inline="true"
@@ -52,7 +52,7 @@
 
         <span :class="{'d-print-none': !invoice.late_fee}">
             <br>{{ $t('invoice-header:late_fee') }}
-            <AppEditable :value="formatCurrency(invoice.late_fee)"
+            <AppEditable :modelValue="formatCurrency(invoice.late_fee)"
                          :errors="errors"
                          suffix="%"
                          field="late_fee"

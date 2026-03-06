@@ -1,7 +1,7 @@
 <template>
     <div>
         <strong>
-            <AppEditable :value="invoice.bank_name"
+            <AppEditable :modelValue="invoice.bank_name"
                          :errors="errors"
                          :disabled="true"
                          field="bank_name"
@@ -9,7 +9,7 @@
                          class="break-line"
                          @click="showBankModal = true"/>
         </strong>
-        <AppEditable :value="invoice.bank_account_no"
+        <AppEditable :modelValue="invoice.bank_account_no"
                      :errors="errors"
                      :disabled="true"
                      field="bank_account_no"

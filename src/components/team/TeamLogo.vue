@@ -21,7 +21,7 @@
                             <AppFileInput accept="image/*" class="mb-4" @selected="logoSelected"
                                           :button-text="$t('team-logo:button_text')" output-type="base64"/>
                             {{ $t('team-logo:or') }}
-                            <AppInput :value="team.logo_url"
+                            <AppInput :modelValue="team.logo_url"
                                       class="mt-4"
                                       @change="updateTeam({ logo_url: $event })"
                                       :label="$t('team-logo:logo_url')"

@@ -15,7 +15,7 @@
   --ms-py: #{$input-padding-y};
   --ms-px: #{$input-padding-x};
 
-  --ms-dropdown-bg: var(--dp24);
+  --ms-dropdown-bg: var(--bg-primary);
   --ms-dropdown-border-color: var(--bg-primary);
   --ms-dropdown-radius: #{$border-radius};
 
@@ -38,6 +38,20 @@
 
 .multiselect-dropdown {
   box-shadow: $box-shadow-2;
+  background-color: var(--bg-primary) !important;
+  z-index: 100;
+}
+
+.multiselect-option {
+  background-color: transparent;
+
+  &.is-pointed {
+    background-color: var(--shade) !important;
+  }
+
+  &.is-selected {
+    background-color: var(--shade) !important;
+  }
 }
 
 .multiselect-search {

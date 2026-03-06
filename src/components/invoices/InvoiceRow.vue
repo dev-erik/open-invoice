@@ -1,28 +1,28 @@
 <template>
     <tr>
         <td>
-            <AppEditable :value="row.item"
+            <AppEditable :modelValue="row.item"
                          :errors="errors"
                          :field="`rows.${index}.item`"
                          :placeholder="$t('invoice-row:enter_item')"
                          @change="updateProp({ item: $event })"/>
         </td>
         <td>
-            <AppEditable :value="row.quantity"
+            <AppEditable :modelValue="row.quantity"
                          :errors="errors"
                          :field="`rows.${index}.quantity`"
                          :placeholder="$t('invoice-row:enter_quantity')"
                          @change="updateProp({ quantity: $event })"/>
         </td>
         <td>
-            <AppEditable :value="row.unit"
+            <AppEditable :modelValue="row.unit"
                          :errors="errors"
                          :field="`rows.${index}.unit`"
                          :placeholder="$t('invoice-row:enter_unit')"
                          @change="updateProp({ unit: $event })"/>
         </td>
         <td>
-            <AppEditable :value="formatCurrency(row.price)"
+            <AppEditable :modelValue="formatCurrency(row.price)"
                          :errors="errors"
                          :field="`rows.${index}.price`"
                          :placeholder="$t('invoice-row:enter_price')"
@@ -30,7 +30,7 @@
         </td>
         <td v-for="(tax, taxIndex) in row.taxes" :title="tax.label">
             <AppEditable v-if="tax.row_id"
-                         :value="formatCurrency(tax.value)"
+                         :modelValue="formatCurrency(tax.value)"
                          :errors="errors"
                          :field="`rows.${index}.taxes.${taxIndex}.value`"
                          :placeholder="$t('invoice-row:enter_tax')"

@@ -13,7 +13,7 @@
     <tr class="text-end">
         <th :colspan="colspan">
             {{ $t('invoice-totals:total') }}
-            <AppEditable :value="invoice.currency"
+            <AppEditable :modelValue="invoice.currency"
                          :errors="errors"
                          field="currency"
                          :placeholder="$t('invoice-totals:add_currency')"

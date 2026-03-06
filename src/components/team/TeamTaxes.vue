@@ -1,11 +1,11 @@
 <template>
     <div>
         <div v-for="tax in taxes" :key="tax.id">
-            <AppEditable :value="tax.label"
+            <AppEditable :modelValue="tax.label"
                          :placeholder="$t('team-taxes:label')"
                          @change="updateTaxProp({ label: $event }, tax)"/> (%)
             <i class="material-icons md-18 float-end pointer" @click="removeTax(tax)">close</i>
-            <AppInput :value="tax.value" @change="updateTaxProp({ value: $event }, tax)"
+            <AppInput :modelValue="tax.value" @change="updateTaxProp({ value: $event }, tax)"
                       :placeholder="tax.label" type="number"/>
         </div>
         <button type="button" class="btn btn-sm btn-secondary" @click="addNewTax">

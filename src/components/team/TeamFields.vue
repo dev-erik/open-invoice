@@ -1,11 +1,11 @@
 <template>
     <div>
         <div v-for="field in team.fields" :key="field.id" class="col-12">
-            <AppEditable :value="field.label"
+            <AppEditable :modelValue="field.label"
                          :placeholder="$t('team-fields:label')"
                          @change="updateFieldProp({ label: $event }, field)"/>
             <i class="material-icons md-18 float-end pointer" @click="removeField(field)">close</i>
-            <AppInput :value="field.value" @change="updateFieldProp({ value: $event }, field)"
+            <AppInput :modelValue="field.value" @change="updateFieldProp({ value: $event }, field)"
                       :placeholder="field.label"/>
         </div>
         <div class="col-12">

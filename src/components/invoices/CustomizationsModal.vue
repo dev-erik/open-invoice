@@ -7,7 +7,7 @@
                     <button type="button" class="btn-close" @click="close"></button>
                 </div>
                 <div class="modal-body">
-                    <AppTextarea :value="team ? team.custom_css : ''"
+                    <AppTextarea :modelValue="team ? team.custom_css : ''"
                                  @change="updateProp({ custom_css: $event })"
                                  :label="$t('customizations-modal:textarea_label')"
                                  field="custom_css"

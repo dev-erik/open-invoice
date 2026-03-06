@@ -2,7 +2,7 @@
     <div>
         <div v-for="field in invoice.client_fields" :key="field.id">
             <span :class="{'d-print-none': !field.value }">{{ field.label }}: </span>
-            <AppEditable :value="field.value"
+            <AppEditable :modelValue="field.value"
                          :placeholder="field.label"
                          class="break-line"
                          @change="updateProp({ value: $event }, field)"/>

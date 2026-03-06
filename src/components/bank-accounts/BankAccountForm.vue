@@ -6,13 +6,13 @@
             </div>
         </div>
         <div v-if="bankAccount" class="row">
-            <AppInput :value="bankAccount.bank_name"
+            <AppInput :modelValue="bankAccount.bank_name"
                       @change="updateProp({ bank_name: $event })"
                       :label="$t('bank-account-form:bank_name')"
                       field="bank_name"
                       :errors="errors"
                       class="col-sm-10"/>
-            <AppTextarea :value="bankAccount.account_no"
+            <AppTextarea :modelValue="bankAccount.account_no"
                          @change="updateProp({ account_no: $event })"
                          :label="$t('bank-account-form:account_no')"
                          field="account_no"

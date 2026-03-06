@@ -4,26 +4,26 @@
             <ClientSelector :value="invoice.client_name" btn-class="font-weight-bold" @selected="clientSelected"/>
             <i class="material-icons md-18 ms-2 pointer d-print-none" v-if="invoice.client" @click="editClient">edit</i>
         </div>
-        <AppEditable :value="invoice.client_address"
+        <AppEditable :modelValue="invoice.client_address"
                      suffix=", "
                      :placeholder="$t('invoice-client-details:client_address')"
                      @change="updateProp({ client_address: $event })"/>
-        <AppEditable :value="invoice.client_postal_code"
+        <AppEditable :modelValue="invoice.client_postal_code"
                      :placeholder="$t('invoice-client-details:client_postal_code')"
                      class="break-line"
                      @change="updateProp({ client_postal_code: $event })"/>
         <AppError :errors="errors" field="client_address"/>
         <AppError :errors="errors" field="client_postal_code"/>
 
-        <AppEditable :value="invoice.client_city"
+        <AppEditable :modelValue="invoice.client_city"
                      suffix=", "
                      :placeholder="$t('invoice-client-details:client_city')"
                      @change="updateProp({ client_city: $event })"/>
-        <AppEditable :value="invoice.client_county"
+        <AppEditable :modelValue="invoice.client_county"
                      suffix=", "
                      :placeholder="$t('invoice-client-details:client_county')"
                      @change="updateProp({ client_county: $event })"/>
-        <AppEditable :value="invoice.client_country"
+        <AppEditable :modelValue="invoice.client_country"
                      :placeholder="$t('invoice-client-details:client_country')"
                      class="break-line"
                      @change="updateProp({ client_country: $event })"/>
@@ -33,7 +33,7 @@
 
         <InvoiceClientFields :invoice="invoice"/>
 
-        <AppEditable :value="invoice.client_email"
+        <AppEditable :modelValue="invoice.client_email"
                      :errors="errors"
                      field="client_email"
                      class="break-line"
