@@ -148,9 +148,9 @@ $white: #fff;
 $blue-dark: #0091EA;
 
 
-@import "../../../node_modules/bootstrap/scss/functions";
-@import "../../../node_modules/bootstrap/scss/variables";
-@import "../../../node_modules/bootstrap/scss/mixins";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
 
 $warning: $orange;
 
@@ -259,7 +259,7 @@ $input-border-color: var(--text-caption);
 $input-bg: var(--bg-control);
 $input-focus-bg: $input-bg;
 $input-disabled-bg: var(--text-disabled);
-$input-btn-padding-x: $grid-gutter-width / 2;
+$input-btn-padding-x: calc($grid-gutter-width / 2);
 $input-placeholder-color: var(--text-disabled);
 
 $input-focus-box-shadow: none;
@@ -277,8 +277,8 @@ $input-group-addon-border-color: $input-border-color;
 $list-group-border-color: transparent;
 $list-group-bg: var(--bg-control);
 $list-group-color: $body-color;
-$list-group-item-padding-y: $grid-gutter-width / 4;
-$list-group-item-padding-x: $grid-gutter-width / 2;
+$list-group-item-padding-y: calc($grid-gutter-width / 4);
+$list-group-item-padding-x: calc($grid-gutter-width / 2);
 
 $progress-bar-bg: var(--text-caption);
 
@@ -297,7 +297,7 @@ $sheet-width: 360px;
 
 $tracker-width: $sheet-width * 1.5;
 
-$table-cell-padding: $grid-gutter-width / 2;
+$table-cell-padding: calc($grid-gutter-width / 2);
 $table-border-color: $border-color;
 $table-border-color: var(--text-caption);
 $table-hover-bg: var(--divider);

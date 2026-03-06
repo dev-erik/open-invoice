@@ -2,14 +2,14 @@ module.exports = {
   root: true,
   env: {
     node: true,
+    es2022: true,
   },
   extends: [
     'plugin:vue/essential',
-    '@vue/airbnb',
   ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-console': 'off',
+    'no-debugger': 'off',
     'consistent-return': 'off',
     'no-param-reassign': 'off',
     'no-prototype-builtins': 'off',
@@ -28,6 +28,7 @@ module.exports = {
     'import/no-cycle': 'off'
   },
   parserOptions: {
-    parser: 'babel-eslint',
+    ecmaVersion: 2022,
+    sourceType: 'module',
   },
 };
