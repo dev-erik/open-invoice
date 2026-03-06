@@ -79,10 +79,6 @@ public/
 
 See [SECURITY.md](SECURITY.md) for the security audit report, including fixed vulnerabilities and known limitations.
 
-## Attribution
-
-This project is a fork of [Serverless Invoices](https://github.com/mokuappio/serverless-invoices) by [Moku](https://mokuapp.io/). The original project was built with Vue 2, Vuex, and Bootstrap-Vue.
-
 ## License
 
-MIT
+MIT — forked from [Serverless Invoices](https://github.com/mokuappio/serverless-invoices) by Moku.

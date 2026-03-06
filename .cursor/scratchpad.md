@@ -19,14 +19,27 @@ See plan file: `.cursor/plans/open_invoice_migration_57ee90a5.plan.md`
 ## Project Status Board
 
 - [x] Phase 0: Fork repo, update comm script, init scratchpad
-- [ ] Phase 1: Security assessment and remediation
-- [ ] Phase 2: Build tooling (Vue CLI → Vite)
-- [ ] Phase 3: Vue 3 + Vue Router 4
-- [ ] Phase 4: Bootstrap-Vue → Bootstrap 5
-- [x] Phase 5: Vuex → Pinia (store layer rewritten)
-- [ ] Phase 6: Replace Vue 2 libraries
-- [ ] Phase 7: PWA, ESLint, cleanup
-- [ ] Phase 8: Branding, README, release
+- [x] Phase 1: Security assessment and remediation
+- [x] Phase 2: Build tooling (Vue CLI → Vite)
+- [x] Phase 3: Vue 3 + Vue Router 4
+- [x] Phase 4: Bootstrap-Vue → Bootstrap 5
+- [x] Phase 5: Vuex → Pinia
+- [x] Phase 6: Replace Vue 2 libraries
+- [x] Phase 7: ESLint, cleanup dead files
+- [x] Phase 8: Branding, README, CHANGELOG, release v1.0.0
+
+### Phase 8a — Old Branding Cleanup COMPLETE
+- Removed Moku links/credits from `TheFooter.vue` — replaced with "Open Invoice" and GitHub link to `dev-erik/open-invoice`
+- Removed "Upgrade" button linking to `app.mokuapp.io`
+- Removed dead i18n keys (`made_with`, `by`, `upgrade`) from all 11 locale `the-footer.json` files
+- Cleaned up `README.md` — collapsed Attribution section into a one-line fork credit in the License section
+- Regenerated `package-lock.json` to remove old `serverless-invoices` name
+- Build passes cleanly
+
+### PROJECT COMPLETE
+- Release: https://github.com/dev-erik/open-invoice/releases/tag/v1.0.0
+- Branch: vue3-migration
+- Build: passes cleanly (`npx vite build`)
 
 ## Executor's Feedback or Assistance Requests
 

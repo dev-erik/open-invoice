@@ -16,26 +16,19 @@
                 {{ $t('the-footer:what_about_my_data') }}
             </small>
             <small class="ps-2">
-                {{ $t('the-footer:made_with') }}
-                <i class="material-icons material-icons-round md-14 align-text-bottom">favorite</i>
-                {{ $t('the-footer:by') }}
-                <a href="https://mokuapp.io/" class="text-secondary" target="_blank">Moku</a>.
+                Open Invoice
             </small>
-            <a href="https://github.com/mokuappio/serverless-invoices"
+            <a href="https://github.com/dev-erik/open-invoice"
                class="btn btn-sm btn--icon ms-0 ms-md-2"
                target="_blank"
                v-if="!isStorageWordpress">
                 <img src="@/assets/img/github.png"
-                     alt="Serverless Invoices Github"
+                     alt="Open Invoice on GitHub"
                      v-if="theme === 'dark'">
                 <img src="@/assets/img/github-dark.png"
-                     alt="Serverless Invoices Github"
+                     alt="Open Invoice on GitHub"
                      v-else>
             </a>
-            <a href="https://app.mokuapp.io/"
-               class="btn btn-sm btn-primary ms-2"
-               target="_blank"
-               v-if="!isStorageWordpress">{{ $t('the-footer:upgrade') }}</a>
         </div>
     </footer>
 </template>
