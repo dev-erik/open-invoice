@@ -28,7 +28,7 @@
   },
   "delete_modal": {
     "title": "고객 삭제",
-    "ok_title": "식제",
+    "ok_title": "삭제",
     "cancel_title": "취소"
   },
   "notification_deleted": "삭제되었습니다",

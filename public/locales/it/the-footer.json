@@ -2,5 +2,7 @@
   "lights-on": "Tema chiaro",
   "lights-off": "Tema scuro",
   "title": "Tutti i tuoi dati sono salvati nel tuo browser e in nessun server esterno.\n Questo programma è interamente realizzato senza server, e solo tu hai accesso alle tue Fatture.",
-  "what_about_my_data": "Dove sono i miei dati? "
+  "what_about_my_data": "Dove sono i miei dati? ",
+  "delete_data": "Elimina tutti i dati",
+  "delete_data_confirm": "Sei sicuro? Tutte le fatture, i clienti e le impostazioni verranno eliminati definitivamente."
 }

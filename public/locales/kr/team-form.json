@@ -28,7 +28,7 @@
     "company_country": "국가"
   },
   "tax_modal": {
-    "title": "현재 송장의 세금 항목을 젚어쓰기 하시겠습니까?",
+    "title": "현재 송장의 세금 항목을 덮어쓰기 하시겠습니까?",
     "ok_title": "덮어쓰기",
     "cancel_title": "취소",
     "taxes_updated": "세금 정보가 수정되었습니다"

@@ -1,6 +1,6 @@
 {
   "invoice_title": "Rechnung ",
-  "invoice_number": "Nein.",
+  "invoice_number": "Nr.",
   "issued_at": "Ausgestellt am: ",
   "due_at": "Fällig am:",
   "late_fee": "Verzugsgebühr:",

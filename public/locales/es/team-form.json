@@ -18,11 +18,11 @@
   "invoicing": {
     "invoice_late_fee": "Cargo por demora (%)",
     "invoice_due_days": "Condiciones de pago, días",
-    "currency": "Mondea predeterminada"
+    "currency": "Moneda predeterminada"
   },
   "address": {
     "company_address": "Dirección de la compañía",
-    "company_postal_code": "Códiog postal",
+    "company_postal_code": "Código postal",
     "company_city": "Ciudad",
     "company_county": "Condado/Estado",
     "company_country": "País"

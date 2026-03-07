@@ -1,7 +1,7 @@
 {
   "invoice_title": "Fattura",
   "invoice_number": "Numero",
-  "issued_at": "Emassa il: ",
+  "issued_at": "Emessa il: ",
   "due_at": "Da pagare entro:",
   "late_fee": "Interessi da pagare:",
   "add_late_fee": "Aggiungi interessi da pagare",

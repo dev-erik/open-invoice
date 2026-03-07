@@ -2,5 +2,7 @@
     "lights-on": "开灯",
     "lights-off": "关灯",
     "title": "您的所有数据都保存在浏览器中，不在任何服务器上。\n                                   此应用完全无服务器，只有您可以访问您的数据。",
-    "what_about_my_data": "我的数据怎么样？ "
+    "what_about_my_data": "我的数据怎么样？ ",
+    "delete_data": "删除所有数据",
+    "delete_data_confirm": "确定要删除吗？所有发票、客户和设置将被永久删除。"
 }

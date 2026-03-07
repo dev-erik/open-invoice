@@ -10,7 +10,7 @@
     "address": "Dirección"
   },
   "general": {
-    "company_name": "Nombre de la compañia",
+    "company_name": "Nombre de la Compañía",
     "invoice_email": "Correo electrónico"
   },
   "invoicing": {
@@ -24,7 +24,7 @@
     "company_postal_code": "Código postal",
     "company_city": "Ciudad",
     "company_county": "Condado/Estado",
-    "company_country": "Pais"
+    "company_country": "País"
   },
   "delete_modal": {
     "title": "Eliminar cliente",

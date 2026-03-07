@@ -2,5 +2,7 @@
     "lights-on": "Beralih ke Mode Terang",
     "lights-off": "Beralih ke Mode Gelap",
     "title": "Semua data tersimpan di peramban Anda, bukan di peladen/server manapun.\n                                   Aplikasi ini benar-benar serverless dan hanya Anda yang memiliki akses ke data Anda.",
-    "what_about_my_data": "Bagaimana dengan data saya? "
+    "what_about_my_data": "Bagaimana dengan data saya? ",
+    "delete_data": "Hapus semua data",
+    "delete_data_confirm": "Apakah Anda yakin? Semua faktur, klien, dan pengaturan akan dihapus secara permanen."
 }

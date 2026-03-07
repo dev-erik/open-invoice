@@ -1,6 +1,8 @@
 {
   "lights-on": "Luces encendidas",
   "lights-off": "Luces apagadas",
-  "title": "Todos sus datos se guardan en su navegador y no en el servidor.\n                                   Esta aplicacíon es verdaderamente sin servidor y solo usted tiene acceso a sus datos",
-  "what_about_my_data": "¿Qué hay de mis datos? "
+  "title": "Todos sus datos se guardan en su navegador y no en el servidor.\n                                   Esta aplicación es verdaderamente sin servidor y solo usted tiene acceso a sus datos",
+  "what_about_my_data": "¿Qué hay de mis datos? ",
+  "delete_data": "Eliminar todos los datos",
+  "delete_data_confirm": "¿Estás seguro? Todas las facturas, clientes y configuraciones se eliminarán permanentemente."
 }

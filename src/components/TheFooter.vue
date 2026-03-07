@@ -8,6 +8,11 @@
                     {{ theme === 'dark' ? 'wb_sunny' : 'brightness_2' }}
                 </i>
             </button>
+            <button class="btn btn-sm text-secondary" @click="deleteAllData"
+                    v-if="!isStorageWordpress">
+                {{ $t('the-footer:delete_data') }}
+                <i class="material-icons material-icons-round md-14 align-text-bottom ms-1">delete_outline</i>
+            </button>
         </div>
         <div class="col-md-8 text-start text-md-end">
             <small class="pointer position-relative data-info-trigger"
@@ -40,6 +45,7 @@
 
 <script>
 import config from '@/config/app.config';
+import storage from 'localforage';
 import { useThemesStore } from '@/store/themes';
 import LanguageSwitcher from './LanguageSwitcher.vue';
 
@@ -63,6 +69,12 @@ export default {
       }
       localStorage.setItem('theme', this.theme);
       document.documentElement.setAttribute('data-theme', this.theme);
+    },
+    async deleteAllData() {
+      if (!window.confirm(this.$t('the-footer:delete_data_confirm'))) return;
+      await storage.clear();
+      localStorage.clear();
+      window.location.reload();
     },
   },
 };
