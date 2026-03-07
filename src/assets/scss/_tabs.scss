@@ -35,35 +35,30 @@
 
   &--simple {
     &.nav-tabs {
+      border-bottom-color: transparent;
+
       > li {
-        > a {
-          border-bottom: 1px solid transparent;
+        > a, > button {
+          border: none;
+          border-bottom: 2px solid transparent;
+          min-width: 90px;
+          text-align: center;
+          font-weight: 500;
+          color: var(--text-secondary);
+          background-color: transparent;
+          padding: 0.5rem 1rem;
 
           &.active {
             background-color: transparent;
-            border-left-color: transparent;
-            border-top-color: transparent;
-            border-right-color: transparent;
             border-bottom-color: var(--text-primary);
             color: $nav-tabs-link-active-color;
           }
 
           &:hover, &:focus, &:active {
             background-color: transparent;
-            border-left-color: transparent;
-            border-top-color: transparent;
-            border-right-color: transparent;
+            border-bottom-color: var(--text-caption);
+            color: $nav-tabs-link-active-color;
           }
-        }
-      }
-
-      > li {
-        > a {
-          border-bottom-width: 2px;
-          min-width: 90px;
-          text-align: center;
-          font-weight: 500;
-          color: $nav-tabs-link-active-color;
         }
       }
     }

@@ -233,6 +233,8 @@ $modal-transition: all 200ms $base-ease;
 $modal-backdrop-bg: var(--scrim);
 $modal-backdrop-opacity: 1;
 $modal-content-border-color: transparent;
+$modal-content-bg: var(--bg-primary);
+$modal-content-color: var(--text-primary);
 $modal-content-box-shadow-sm-up: $box-shadow-light-6;
 
 $navbar-light-color: var(--text-secondary);

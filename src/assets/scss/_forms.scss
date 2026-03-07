@@ -4,3 +4,24 @@
   font-weight: 400;
   color: var(--error-darken);
 }
+
+.form-group {
+  margin-bottom: 0.75rem;
+}
+
+.form-control {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--text-disabled);
+
+  &:focus {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(41, 98, 255, 0.2);
+  }
+
+  &::placeholder {
+    color: var(--text-disabled);
+  }
+}
