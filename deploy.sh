@@ -7,7 +7,7 @@ echo "Deploying to Vercel production..."
 OUTPUT=$(npx vercel --prod --yes 2>&1)
 echo "$OUTPUT"
 
-DEPLOYMENT_URL=$(echo "$OUTPUT" | grep -oE 'https://[a-z0-9-]+-eriks-projects-[a-z0-9]+\.vercel\.app' | head -1)
+DEPLOYMENT_URL=$(echo "$OUTPUT" | grep -oE 'https://[a-z0-9-]+\.vercel\.app' | grep -v "$ALIAS" | head -1)
 
 if [ -z "$DEPLOYMENT_URL" ]; then
   echo "Error: Could not extract deployment URL from output."
